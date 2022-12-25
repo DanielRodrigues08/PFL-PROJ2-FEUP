@@ -4,7 +4,7 @@
 % Esta função verifica o size (tem de ser par e superior a 10) e chama a função responsável pela criação do tabuleiro.
 % Retorna o estado do jogo, que consiste num termo composto game_state que tem o estado atual do tabuleiro e a vez do jogador (player1 ou player2)
 initial_state(Size, game_state(Board, player1)) :-
-    Size > 10,
+    Size >= 10,
     Size mod 2 =:= 0,
     create_board(Size, Board).
 
@@ -95,4 +95,46 @@ decide_piece(Size, NRow, NColumn, water_hole) :-
     NColumn =:= Size // 2 + 2, 
     NRow =:= Size // 2 + 2,
     !.
-decide_piece(_,_,_,none).
+decide_piece(_,_,_,empty).
+
+
+%print_elen()
+print_elem(empty, ' ').
+print_elem(piece(mouse,player1), 'm').
+print_elem(piece(mouse,player2), 'M').
+print_elem(piece(elephant,player1), 'e').
+print_elem(piece(elephant,player2), 'E').
+print_elem(piece(elephant,player1), 'l').
+print_elem(piece(elephant,player2), 'L').
+
+
+% print_n(+S, +N)
+print_n(_,0).
+print_n(S,N):-
+    N > 0,
+    write(S),
+    N1 is N-1,
+    print_n(S,N1).
+
+
+display_board(Board):- 
+    nl,nl, clear,
+    write(' ************'),nl,
+    display_lines(Board),
+    write(' ************'),nl,nl.
+
+display_lines([]).
+display_lines([Line|Lines]):- 
+    display_line(Line),
+    display_lines(Lines).
+
+display_line(Line):-
+    write(' *'),
+    display_elem(Line),
+    write('*'), nl.
+
+display_elem([]).
+display_elem([E|T]):-
+    print_elem(C,E),
+    write(C),
+    display_elem(T).
