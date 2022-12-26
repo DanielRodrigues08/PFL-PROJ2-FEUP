@@ -121,6 +121,8 @@ print_elem(piece(elephant,player1), 'l').
 print_elem(piece(elephant,player2), 'L').
 
 
+%TODO - display_game(+GameState)
+
 % print_n(+S, +N)
 print_n(_,0).
 print_n(S,N):-
