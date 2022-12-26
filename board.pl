@@ -136,15 +136,21 @@ water_hole(Board, NRow, NColumn) :-
     NColumn =:= Size // 2 + 1, 
     NRow =:= Size // 2 + 1,
     !.
+
+
+elem_color(white,' ').
+elem_color(black,'#').
 %print_elem()
-print_elem(empty, ' ').
-print_elem(piece(mouse,player1), 'm').
-print_elem(piece(mouse,player2), 'M').
-print_elem(piece(elephant,player1), 'e').
-print_elem(piece(elephant,player2), 'E').
-print_elem(piece(lion,player1), 'l').
-print_elem(piece(lion,player2), 'L').
-print_elem(water_hole, 'W').
+print_elem(empty, C,RowNum,ColNum):-
+    color_square(RowNum,ColNum,Color),
+    elem_color(Color,C).
+print_elem(piece(mouse,player1), 'm',_,_).
+print_elem(piece(mouse,player2), 'M',_,_).
+print_elem(piece(elephant,player1), 'e',_,_).
+print_elem(piece(elephant,player2), 'E',_,_).
+print_elem(piece(lion,player1), 'l',_,_).
+print_elem(piece(lion,player2), 'L',_,_).
+print_elem(water_hole, 'W',_,_).
 
 
 
@@ -156,26 +162,50 @@ print_n(S,N):-
     N1 is N-1,
     print_n(S,N1).
 
+display_fist_line(Col,Col).
 
-%display_game(+GameState)
-display_game(game_state(Board, _)):- 
-    nl,nl, clear,
-    write(' ************'),nl,
-    display_lines(Board),
-    write(' ************'),nl,nl.
+display_fist_line(Col,Num):-
+    write(' | '),
+    write(Num),
+    Num1 is Num + 1,
+    display_fist_line(Col,Num1).
 
-display_lines([]).
-display_lines([Line|Lines]):- 
-    display_line(Line),
-    display_lines(Lines).
 
-display_line(Line):-
-    write(' *'),
-    display_elem(Line),
-    write('*'), nl.
 
-display_elem([]).
-display_elem([E|T]):-
-    print_elem(E,C),
-    write(C),
-    display_elem(T).
+
+% A predicate to display the board to the user
+display_game(game_state(Board, _)) :-
+  nl,nl, clear,
+  nth0(0, Board,Elem),
+  length(Elem , Col),
+  write(' '),
+  display_fist_line(Col, 0), nl,
+  write('--'),
+  display_ln(Col,0),    
+  display_board_aux(Board, 0).
+
+display_ln(Length,Length).
+display_ln(Length,Num):-
+    write(' ---'),
+    Num1 is Num + 1,
+    display_ln(Length,Num1).
+
+display_board_aux([], _).
+display_board_aux([Row|Rest], RowNum) :-
+  nl,
+  write(RowNum), write(' | '),
+  length(Row , Length),
+  display_row(Row, RowNum,0),
+  nl,
+  write('--'), 
+  display_ln(Length,0),
+  NextRowNum is RowNum + 1,
+  display_board_aux(Rest, NextRowNum).
+
+
+display_row([],_,_).
+display_row([Cell|Rest],RowNum,ColNum) :-
+  print_elem(Cell,C,RowNum,ColNum),
+  write(C), write(' | '),
+  NextColNum is ColNum+1,
+  display_row(Rest,RowNum,NextColNum).
