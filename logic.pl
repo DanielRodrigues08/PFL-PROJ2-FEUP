@@ -3,4 +3,4 @@
 
 %valid_move(game_state(Board, Player), pos)
  
- 
+%game_over(+GameState, -Winner).

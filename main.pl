@@ -1,4 +1,6 @@
-use_module(library(lists)). % Load list library
+:- use_module(library(lists)). % Load list library
+:- use_module(library(between)).
+
 
 :- consult('board.pl').       
 :- consult('game.pl').

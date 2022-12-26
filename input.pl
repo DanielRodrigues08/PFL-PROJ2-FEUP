@@ -1,60 +1,62 @@
+% Clears the terminal screen
+clear :- write('\e[2J').
 
+/**
+ * invalidDigit(+C)
+ *
+ * Checks if the char is an invalid digit and clears input if so
+ */
+invalidDigit(C) :-
+    (C < 48 ; C > 57),
+    skip_line.
 
-% read_number(-X)
-read_number(X):-
-    read_number_aux(X,0).
+validDigit(C) :- \+ invalidDigit(C), !.
 
-read_number_aux(X,Acc):- 
+/**
+ * readNumber(-X)
+ *
+ * Reads a number from input
+ */
+readNumber(X) :- readNumber(X, 0).
+
+readNumber(X, X) :-
+    peek_code(10), !,
+    skip_line.
+
+readNumber(X, Acc) :-
     get_code(C),
-    C >= 48,
-    C =< 57,
-    Acc1 is 10*Acc + (C - 48),
-    read_number_aux(X,Acc1).
+    validDigit(C),
+    Real is C - 48,
+    Tmp is Acc * 10,
+    Acc1 is Tmp + Real,
+    readNumber(X, Acc1).
 
-read_number_aux(X,X):-
-    get_code(C),
-    C  =:= 10. 
-
-read_number_aux(X,Acc):- 
-    get_code(C),
-    C < 48,read_number_aux(X,Acc).
-
-
-read_number_aux(X,Acc):- 
-    get_code(C),
-    C > 57,read_number_aux(X,Acc).
-
-
-
-% clear_buffer.
-% Clears the input buffer.
-clear_buffer(0).
-clear_buffer(N):-
-    N1 is N-1,
-    nl,
-    clear_buffer(N1).
-
-% read_until_between(+ Message, +Min, +Max, -Value)
-read_until_between(Message,Min,Max,Value):-
-    repeat, 
+/**
+ * read_until_between(+Message, +Min, +Max, -Value)
+ *
+ * Reads a number from input until the user inserts one between two values
+ */
+read_until_between(Message,Min, Max, Value) :-
     write(Message),
-    nl,
-    read_number(Value),
-    Value >= Min,
-    Value =< Max,
-    !.
+    format('[~d-~d]: ', [Min, Max]),
+    readNumber(Value),
+    between(Min, Max, Value), !.
+
+read_until_between(Message,Min, Max, Value) :-
+    format('Invalid option! Please choose between ~d and ~d~n', [Min, Max]),
+    read_until_between(Message,Min, Max, Value).
 
 read_piece_pos(Xi-Yi):-
     write('Pick a piece.'),
     nl,
-    read_until_between('Line?(0-9)',0,9,Xi),
-    read_until_between('Column?(0-9)',0,9,Yi).
+    read_until_between('Line?',0,9,Xi),
+    read_until_between('Column?',0,9,Yi).
 
 read_final_piece_pos(Xf-Yf):-
     write('Chose the next position.'),
     nl,
-    read_until_between('Line?(0-9)',0,9,Xf),
-    read_until_between('Column?(0-9)',0,9,Yf).
+    read_until_between('Line?',0,9,Xf),
+    read_until_between('Column?',0,9,Yf).
 
 clear:-
     write('\33\[2J').
