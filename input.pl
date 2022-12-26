@@ -8,10 +8,23 @@ read_number_aux(X,Acc):-
     get_code(C),
     C >= 48,
     C =< 57,
-    !,
     Acc1 is 10*Acc + (C - 48),
     read_number_aux(X,Acc1).
-read_number_aux(X,X).
+
+read_number_aux(X,X):-
+    get_code(C),
+    C  =:= 10. 
+
+read_number_aux(X,Acc):- 
+    get_code(C),
+    C < 48,read_number_aux(X,Acc).
+
+
+read_number_aux(X,Acc):- 
+    get_code(C),
+    C > 57,read_number_aux(X,Acc).
+
+
 
 % clear_buffer.
 % Clears the input buffer.
@@ -34,14 +47,14 @@ read_until_between(Message,Min,Max,Value):-
 read_piece_pos(Xi-Yi):-
     write('Pick a piece.'),
     nl,
-    read_until_between('Line?',0,9,Xi),
-    read_until_between('Column?',0,9,Yi).
+    read_until_between('Line?(0-9)',0,9,Xi),
+    read_until_between('Column?(0-9)',0,9,Yi).
 
 read_final_piece_pos(Xf-Yf):-
     write('Chose the next position.'),
     nl,
-    read_until_between('Line?',0,9,Xf),
-    read_until_between('Line?',0,9,Yf).
+    read_until_between('Line?(0-9)',0,9,Xf),
+    read_until_between('Column?(0-9)',0,9,Yf).
 
 clear:-
     write('\33\[2J').
