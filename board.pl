@@ -117,11 +117,11 @@ print_elem(piece(mouse,player1), 'm').
 print_elem(piece(mouse,player2), 'M').
 print_elem(piece(elephant,player1), 'e').
 print_elem(piece(elephant,player2), 'E').
-print_elem(piece(elephant,player1), 'l').
-print_elem(piece(elephant,player2), 'L').
+print_elem(piece(lion,player1), 'l').
+print_elem(piece(lion,player2), 'L').
+print_elem(water_hole, 'W').
 
 
-%TODO - display_game(+GameState)
 
 % print_n(+S, +N)
 print_n(_,0).
@@ -131,8 +131,8 @@ print_n(S,N):-
     N1 is N-1,
     print_n(S,N1).
 
-
-display_game(GameState(Board, Player1)):- 
+%display_game(+GameState)
+display_game(game_state(Board, Player1)):- 
     nl,nl, clear,
     write(' ************'),nl,
     display_lines(Board),
@@ -150,6 +150,6 @@ display_line(Line):-
 
 display_elem([]).
 display_elem([E|T]):-
-    print_elem(C,E),
+    print_elem(E,C),
     write(C),
     display_elem(T).
