@@ -97,6 +97,19 @@ decide_piece(Size, NRow, NColumn, water_hole) :-
     !.
 decide_piece(_,_,_,empty).
 
+%color_square(+NRow, +NColumn, -Color)
+%Dada a posição de um quadrado de um tabuleiro retorna a sua cor(preto ou branco)
+color_square(NRow, NColumn, white) :-
+    NRow mod 2 =:= 0,
+    NColumn mod 2 =:= 0,
+    !.
+
+color_square(NRow, NColumn, white) :-
+    NRow mod 2 =:= 1,
+    NColumn mod 2 =:= 1,
+    !.
+
+color_square(_, _, black).
 
 %print_elen()
 print_elem(empty, ' ').
