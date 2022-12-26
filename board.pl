@@ -111,7 +111,7 @@ color_square(NRow, NColumn, white) :-
 
 color_square(_, _, black).
 
-%print_elen()
+%print_elem()
 print_elem(empty, ' ').
 print_elem(piece(mouse,player1), 'm').
 print_elem(piece(mouse,player2), 'M').
@@ -132,7 +132,7 @@ print_n(S,N):-
     print_n(S,N1).
 
 
-display_board(Board):- 
+display_game(GameState(Board, Player1)):- 
     nl,nl, clear,
     write(' ************'),nl,
     display_lines(Board),
