@@ -111,6 +111,31 @@ color_square(NRow, NColumn, white) :-
 
 color_square(_, _, black).
 
+%water_hole(+Board, +NRow, +NColumn)
+%Dada uma posição no tabuleiro verifica se essa posição contém uma "water_hole"
+water_hole(Board, NRow, NColumn) :-
+    length(Board, Size),
+    NColumn =:= Size // 2 - 2, 
+    NRow =:= Size // 2 - 2,
+    !.
+
+water_hole(Board, NRow, NColumn) :-
+    length(Board, Size),
+    NColumn =:= Size // 2 - 2, 
+    NRow =:= Size // 2 + 1,
+    !.
+
+water_hole(Board, NRow, NColumn) :-
+    length(Board, Size),
+    NColumn =:= Size // 2 + 1, 
+    NRow =:= Size // 2 - 2,
+    !.
+
+water_hole(Board, NRow, NColumn) :-
+    length(Board, Size),
+    NColumn =:= Size // 2 + 1, 
+    NRow =:= Size // 2 + 1,
+    !.
 %print_elem()
 print_elem(empty, ' ').
 print_elem(piece(mouse,player1), 'm').
@@ -131,8 +156,10 @@ print_n(S,N):-
     N1 is N-1,
     print_n(S,N1).
 
+
 %display_game(+GameState)
-display_game(game_state(Board, Player1)):- 
+display_game(game_state(Board, _)):- 
+
     nl,nl, clear,
     write(' ************'),nl,
     display_lines(Board),
