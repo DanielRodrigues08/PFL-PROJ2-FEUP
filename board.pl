@@ -159,7 +159,6 @@ print_n(S,N):-
 
 %display_game(+GameState)
 display_game(game_state(Board, _)):- 
-
     nl,nl, clear,
     write(' ************'),nl,
     display_lines(Board),
