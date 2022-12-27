@@ -182,7 +182,7 @@ display_game(game_state(Board, _)) :-
   display_fist_line(Col, 0), nl,
   write('--'),
   display_ln(Col,0),    
-  display_board_aux(Board, 0).
+  display_board_aux(Board, 0),nl.
 
 display_ln(Length,Length).
 display_ln(Length,Num):-
