@@ -6,5 +6,6 @@
 :- consult('menu.pl').
 :- consult('input.pl').
 
-play:-init_menu.
+play :-
+    init_menu.
 

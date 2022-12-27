@@ -1,7 +1,7 @@
 :- use_module(library(lists)).
 
 %initial_state(+Size, -GameState)
-% Esta função verifica o size (tem de ser par e superior a 10) e chama a função responsável pela criação do tabuleiro.
+% Esta Functor verifica o size (tem de ser par e superior a 10) e chama a Functor responsável pela criação do tabuleiro.
 % Retorna o estado do jogo, que consiste num termo composto game_state que tem o estado atual do tabuleiro e a vez do jogador (player1 ou player2)
 initial_state(Size, game_state(Board, player1)) :-
     Size >= 10,
@@ -9,13 +9,13 @@ initial_state(Size, game_state(Board, player1)) :-
     create_board(Size, Board).
 
 %create_board(+Size, -Board)
-% Esta função é responsável pela criação do tabuleiro
+% Esta Functor é responsável pela criação do tabuleiro
 % Recorre a uma funcção auxiliar permitindo a "tail recursion" aumentando a eficiência
 create_board(Size, Board) :-
     create_board_aux(Size, Size, [], Board).
 
 %create_board_aux(+Size, ?NRow, ?Acc, -Board)
-%Função auxiliar da create_board
+%Functor auxiliar da create_board
 create_board_aux(_, 0, Acc, Acc) :- !.
 create_board_aux(Size, NRow, Acc, Board) :-
     NRow > 0,
@@ -29,7 +29,7 @@ create_row(Size, NRow, Row) :-
     create_row_aux(Size, NRow, Size, [], Row).
 
 %create_row_aux(+Size, +NRow, ?NColumn, ?Acc, -Row)
-%Função auxiliar da create_row
+%Functor auxiliar da create_row
 create_row_aux(_, _, 0, Acc, Acc) :- !.
 create_row_aux(Size, NRow, NColumn, Acc, Row) :-
     NColumn > 0,
@@ -38,7 +38,7 @@ create_row_aux(Size, NRow, NColumn, Acc, Row) :-
     create_row_aux(Size, NRow, NColumn1, [Piece | Acc], Row).
 
 %decide_piece(+Size, +NRow, +NColumn, -Piece)
-%Função que retorna o tipo de peça que ocupa uma determinada posição do tabuleiro no estado inicial
+%Functor que retorna o tipo de peça que ocupa uma determinada posição do tabuleiro no estado inicial
 decide_piece(Size, 1, NColumn, piece(elephant, player1)) :-
     NColumn =:= Size // 2,
     !.
