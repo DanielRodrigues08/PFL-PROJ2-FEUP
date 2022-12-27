@@ -5,6 +5,7 @@
 :- consult('logic.pl').
 :- consult('menu.pl').
 :- consult('input.pl').
+:- consult('utils.pl').
 
 play :-
     init_menu.
