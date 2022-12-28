@@ -1,29 +1,26 @@
 %move(+GameState, +Move, -NewGameState)
 %Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
-move(GameState, Move, game_state(NewBoard, NewPlayer)) :-
-    valid_move(GameState, Move),
-    game_state(Board, Player) = Board,
-    move_position(OldPosition, NewPosition) = Move,
-    change_board(Board, OldPosition, NewPosition, NewBoard),
+move(game_state(Board, Player), move_position(InitialPos, FinalPos), game_state(NewBoard, NewPlayer)) :-
+    valid_move(game_state(Board, Player), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard),
     append([Player], [NewPlayer], [player1,player2]).
 
 %valid_move(+GameState, +Move)
 %Verifica se o Move é válido seguindo as regras do jogo
 
 %se o animal escolhido estiver preso
-vaild_move(GameState, Move) :-
+vaild_move(GameState, move_position(InitialPos, FinalPos)) :-
     valid_initial_positions(GameState, ValidInitialPositions),
-    member(Move, ValidInitialPositions),
-    move_position(InitialPos, FinalPos) = Move,
+    member(InitialPos, ValidInitialPositions),
     trap_animal(Board, InitialPos),
     get_element_board(Board, InitialPos, Piece),
     scared_animal(Board, Piece, FinalPos).
 
 valid_move(GameState, Move) :-
-    valid_initial_positions(GameState, ValidInitialPositions),
-    member(Move, ValidInitialPositions),
-    game_state(Board, _) = GameState,
     move_position(InitialPos, FinalPos) = Move,
+    valid_initial_positions(GameState, ValidInitialPositions),
+    member(InitialPos, ValidInitialPositions),
+    game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
     valid_type_move(Move, Piece),
     jump_animals(Board, Move),

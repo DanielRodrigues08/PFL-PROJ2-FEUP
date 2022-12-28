@@ -11,16 +11,17 @@ position_pieces(Elem, Board, Positions) :-
 
 %change_board(+Board, +OldPositon, +NewPosition, -NewBoard)
 %Altera a posição de um elemento do board verificando se esse elemento estava numa casa com uma "water_hole" 
-change_board(Board, OldPosition, NewPosition, NewBoard) :-
-    water_hole(Board, OldPosition),
-    get_element_board(Board, OldPosition, Elem),
-    change_element(Board, NewPosition, Elem, NewBoard1),
-    change_element(NewBoard1, OldPosition, water_hole, NewBoard).
 
-change_board(Board, OldPosition, NewPosition, NewBoard) :-
-    get_element_board(Board, OldPosition, Elem),
-    change_element(Board, NewPosition, Elem, NewBoard1),
-    change_element(NewBoard1, OldPosition, empty, NewBoard).
+change_board(Board, InitialPosition, NewPosition, NewBoard) :-
+    water_hole(Board, InitialPosition),
+    get_element_board(Board, InitialPosition, Elem),
+    change_element(Board, InitialPosition, water_hole, BoardAux),
+    change_element(BoardAux, NewPosition, Elem, NewBoard).
+
+change_board(Board, InitialPosition, NewPosition, NewBoard) :-
+    get_element_board(Board, InitialPosition, Elem),
+    change_element(Board, InitialPosition, empty, BoardAux),
+    change_element(BoardAux, NewPosition, Elem, NewBoard).
 
 %change_element(+ListOfLists, +Position, +NewElement, -NewListOfLists)
 %Altera o elemento que se encontra na posição Positon para NewElement unificando a lista resultante com o NewListOfLists
@@ -42,20 +43,20 @@ change_element_aux(List, NColumn, NewElement, NewList) :-
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)), horizontal, pos(0, DisplacementColumn)) :-
     dif(InitialColumn, FinalColumn),
     DisplacementColumnAux is FinalColumn - InitialColumn,
-    DisplacementColumn is DisplacementColumnAux / abs(DisplacementColumnAux),
+    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
     !.
 
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, InitialColumn)), vertical, pos(DisplacementRow, 0)) :-
     dif(InitialRow, FinalRow),
     DisplacementRowAux is FinalRow - InitialRow,
-    DisplacementRow is DisplacementRowAux / abs(DisplacementRowAux),
+    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
     !.
 
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn)), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
     DisplacementRowAux is FinalRow - InitialRow,
     DisplacementColumnAux is FinalColumn - InitialColumn,
-    DisplacementRow is DisplacementRowAux / abs(DisplacementRowAux),
-    DisplacementColumn is DisplacementColumnAux / abs(DisplacementColumnAux),
+    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
+    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
     DisplacementColumnAux =:= DisplacementRowAux,
     !.
 

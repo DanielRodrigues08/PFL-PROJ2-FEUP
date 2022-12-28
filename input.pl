@@ -50,7 +50,8 @@ read_until_between(Message,Min, Max, Value) :-
 
 choose_piece(game_state(Board, Player), pos(Xi, Yi)):-
     read_piece_pos(pos(Xi, Yi)),
-    valid_piece(game_state(Board, Player), pos(Xi, Yi)), !.
+    valid_initial_positions(game_state(Board, Player), ListPositions),
+    member(pos(Xi, Yi), ListPositions), !.
 
 choose_piece(game_state(Board, Player), pos(Xi, Yi)):-
     clear,
@@ -63,7 +64,7 @@ choose_final_pos(game_state(Board,_),  pos(Xi, Yi), pos(Xf, Yf)):-
     read_final_piece_pos(pos(Xf, Yf)),
     nth0(Xi,Board,Row),
     nth0(Yi,Row,Elem),
-    valid_moviment(pos(Xi, Yi),pos(Xf, Yf), Elem).
+    valid_move(move_position(pos(Xi, Yi),pos(Xf, Yf)), Elem).
 
 choose_final_pos(game_state(Board, Player), pos(Xi, Yi), pos(Xf, Yf)):-
     clear,
