@@ -97,3 +97,6 @@ jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(Displ
     CurrentRow1 is CurrentRow + DisplacementRow,
     CurrentColumn1 is CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+
+
+%value(+GameState, +Player, -Value)
