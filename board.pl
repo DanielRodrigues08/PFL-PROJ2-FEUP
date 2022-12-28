@@ -113,25 +113,25 @@ color_square(_, _, black).
 
 %water_hole(+Board, +NRow, +NColumn)
 %Dada uma posição no tabuleiro verifica se essa posição contém uma "water_hole"
-water_hole(Board, NRow, NColumn) :-
+water_hole(Board, pos(NRow, NColumn)) :-
     length(Board, Size),
     NColumn =:= Size // 2 - 2, 
     NRow =:= Size // 2 - 2,
     !.
 
-water_hole(Board, NRow, NColumn) :-
+water_hole(Board, pos(NRow, NColumn)) :-
     length(Board, Size),
     NColumn =:= Size // 2 - 2, 
     NRow =:= Size // 2 + 1,
     !.
 
-water_hole(Board, NRow, NColumn) :-
+water_hole(Board, pos(NRow, NColumn)) :-
     length(Board, Size),
     NColumn =:= Size // 2 + 1, 
     NRow =:= Size // 2 - 2,
     !.
 
-water_hole(Board, NRow, NColumn) :-
+water_hole(Board, pos(NRow, NColumn)) :-
     length(Board, Size),
     NColumn =:= Size // 2 + 1, 
     NRow =:= Size // 2 + 1,

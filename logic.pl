@@ -1,5 +1,15 @@
 :- consult('utils.pl').
   
+%move(+GameState, +Move, -NewGameState)
+move(GameState, Move, game_state(NewBoard, NewPlayer)) :-
+    valid_move(GameState, Move),
+    game_state(Board, Player) = Board,
+    append([Player], [NewPlayer], [player1,player2]).
+
+
+
+
+
 %move(GameState, InitialPos, FinalPos, -NewGameState)
 move(game_state(Board, Player), pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn), game_state(NewBoard, NewPlayer)).
     
@@ -50,11 +60,6 @@ jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(Displ
     CurrentColumn1 is CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
-%get_element_board
-%Retorna o elemento que ocupa a posição Row-Column no tabuleiro
-get_element_board(Board, pos(NRow, NColumn), Elem) :-
-    nth0(NRow, Board, Row),
-    nth0(NColumn, Row, Elem).
 
 %type_of_moviment(+InitialPos, +FinalPos, -TypeOfMoviment, +Displacement)
 %Retorna o tipo de movimento(horizontal, vertical ou na diagonal) dada a posição inicial e final 
