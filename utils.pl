@@ -99,7 +99,7 @@ adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2), diagonal) :-
 %Associa os animais com os tipos de deslocamentos que podem no tabuleiro
 type_of_moviment(piece(mouse,_), horizontal).
 type_of_moviment(piece(mouse,_), vertical).
-type_of_moviment(piece(lion,_), horizontal).
+type_of_moviment(piece(lion,_), diagonal).
 type_of_moviment(piece(elephant,_), horizontal).
 type_of_moviment(piece(elephant,_), vertical).
 type_of_moviment(piece(elephant,_), diagonal).
