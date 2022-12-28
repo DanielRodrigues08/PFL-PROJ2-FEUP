@@ -11,7 +11,6 @@ position_pieces(Elem, Board, Positions) :-
 
 %change_board(+Board, +OldPositon, +NewPosition, -NewBoard)
 %Altera a posição de um elemento do board verificando se esse elemento estava numa casa com uma "water_hole" 
-
 change_board(Board, InitialPosition, NewPosition, NewBoard) :-
     water_hole(Board, InitialPosition),
     get_element_board(Board, InitialPosition, Elem),
@@ -60,6 +59,8 @@ type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalCo
     DisplacementColumnAux =:= DisplacementRowAux,
     !.
 
+%adjacent_position(+Pos1, ?Pos2)
+%Verifica se as posições Pos1 e Pos2 são adjacentes. Também pode unificar a Pos2 com uma posição adjacente a Pos1
 adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2)) :-
     dif(pos(NRow1, NColumn1), pos(NRow2, NColumn2)),
     DisplacementRow #= NRow2 - NRow1,
@@ -69,6 +70,9 @@ adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2)) :-
     DisplacementRow #< 2,
     DisplacementRow #> -2.
 
+
+%adjacent_position(+Pos1, ?Pos2, +Type)
+%Muito semalhante ao predicado adjacent_position/2 sendo que neste predicado podemos especificar as posições onde tem de procurar
 adjacent_position(pos(NRow, NColumn1), pos(NRow, NColumn2), horizontal) :-
     dif(NColumn1,NColumn2),
     DisplacementColumn #= NColumn2 - NColumn1,
@@ -90,8 +94,6 @@ adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2), diagonal) :-
     DisplacementColumn #> -2,
     DisplacementRow #< 2,
     DisplacementRow #> -2.
-
-
 
 %type_of_movimento(?Piece, ?TypeOfMoviment)
 %Associa os animais com os tipos de deslocamentos que podem no tabuleiro
