@@ -66,7 +66,7 @@ write_initial_positions_aux(game_state(Board, _),[pos(Xi,Yi) | Positions]):-
 
 
 %choose_move(+GameState, +Player,+Level, -Move)
-choose_move(game_state(Board, Player), pos(Xi, Yi),pos(Xf, Yf)):-
+human_move(game_state(Board, Player), pos(Xi, Yi),pos(Xf, Yf)):-
     valid_initial_positions(game_state(Board, Player), ListPositions),
     write_initial_positions(game_state(Board, Player),ListPositions),
     read_piece_pos(pos(Xi, Yi)),

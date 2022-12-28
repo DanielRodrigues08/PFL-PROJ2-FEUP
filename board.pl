@@ -140,6 +140,7 @@ water_hole(Board, pos(NRow, NColumn)) :-
 
 elem_color(white,' ').
 elem_color(black,'#').
+
 %print_elem()
 print_elem(empty, C,RowNum,ColNum):-
     color_square(RowNum,ColNum,Color),
@@ -162,8 +163,8 @@ print_n(S,N):-
     N1 is N-1,
     print_n(S,N1).
 
-display_fist_line(Col,Col).
 
+display_fist_line(Col,Col).
 display_fist_line(Col,Num):-
     write(' | '),
     write(Num),
@@ -171,11 +172,11 @@ display_fist_line(Col,Num):-
     display_fist_line(Col,Num1).
 
 
-
-
 % A predicate to display the board to the user
-display_game(game_state(Board, _)) :-
+display_game(game_state(Board, Player)) :-
   nl,nl, clear,
+  write('Turn : '),
+  write(Player),nl,nl,
   nth0(0, Board,Elem),
   length(Elem , Col),
   write(' '),
