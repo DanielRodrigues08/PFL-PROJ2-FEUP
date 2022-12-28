@@ -1,3 +1,9 @@
+%get_element_board(+Board, +Position, -Elem)
+%Unifica o elemento que ocupa a posição Row-Column no tabuleiro com a variável Elem
+get_element_board(Board, pos(NRow, NColumn), Elem) :-
+    nth0(NRow, Board, Row),
+    nth0(NColumn, Row, Elem).
+
 %position_pieces(+Elem, +Board, -Positions)
 %Unifica Positions com a lista de todas as posições do Elem presente no Board 
 position_pieces(Elem, Board, Positions) :-
@@ -31,27 +37,21 @@ change_element_aux(List, NColumn, NewElement, NewList) :-
     select(OldElement, List, NewElement, NewList),
     nth0(NColumn, List, OldElement).
 
-%get_element_board(+Board, +Position, -Elem)
-%Unifica o elemento que ocupa a posição Row-Column no tabuleiro com a variável Elem
-get_element_board(Board, pos(NRow, NColumn), Elem) :-
-    nth0(NRow, Board, Row),
-    nth0(NColumn, Row, Elem).
-
-%type_of_moviment(+InitialPos, +FinalPos, -TypeOfMoviment, +Displacement)
+%type_of_move(+Move, -TypeOfMoviment, +Displacement)
 %Indica o tipo de movimento(horizontal, vertical ou na diagonal) dada a posição inicial e final 
-type_of_moviment(pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn), horizontal, pos(0, DisplacementColumn)) :-
+type_of_move(move_position(pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)), horizontal, pos(0, DisplacementColumn)) :-
     dif(InitialColumn, FinalColumn),
     DisplacementColumnAux is FinalColumn - InitialColumn,
     DisplacementColumn is DisplacementColumnAux / abs(DisplacementColumnAux),
     !.
 
-type_of_moviment(pos(InitialRow, InitialColumn), pos(FinalRow, InitialColumn), vertical, pos(DisplacementRow, 0)) :-
+type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, InitialColumn)), vertical, pos(DisplacementRow, 0)) :-
     dif(InitialRow, FinalRow),
     DisplacementRowAux is FinalRow - InitialRow,
     DisplacementRow is DisplacementRowAux / abs(DisplacementRowAux),
     !.
 
-type_of_moviment(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
+type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn)), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
     DisplacementRowAux is FinalRow - InitialRow,
     DisplacementColumnAux is FinalColumn - InitialColumn,
     DisplacementRow is DisplacementRowAux / abs(DisplacementRowAux),

@@ -9,9 +9,25 @@ move(GameState, Move, game_state(NewBoard, NewPlayer)) :-
 
 %valid_move(+GameState, +Move)
 %Verifica se o Move é válido seguindo as regras do jogo
+
+%se o animal escolhido estiver preso
+vaild_move(GameState, Move) :-
+    valid_initial_positions(GameState, ValidInitialPositions),
+    member(Move, ValidInitialPositions),
+    move_position(InitialPos, FinalPos) = Move,
+    trap_animal(Board, InitialPos),
+    get_element_board(Board, InitialPos, Piece),
+    scared_animal(Board, Piece, FinalPos).
+
 valid_move(GameState, Move) :-
     valid_initial_positions(GameState, ValidInitialPositions),
-    member(Move, ValidInitialPositions).
+    member(Move, ValidInitialPositions),
+    game_state(Board, _) = GameState,
+    move_position(InitialPos, FinalPos) = Move,
+    get_element_board(Board, InitialPos, Piece),
+    valid_type_move(Move, Piece),
+    jump_animals(Board, Move),
+    \+scared_animal(Board, Piece, FinalPos).
 
 
 trap_animal(Board, Position) :-
@@ -55,31 +71,19 @@ valid_initial_positions(GameState, ListPositions) :-
 valid_initial_positions(game_state(Board, Player), ListPositions) :-
     position_pieces(piece(_, Player), Board, ListPositions).
 
-%valid_moviment(+InitialPosition, +FinalPosition, +Piece)
+%valid_type_move(+InitialPosition, +FinalPosition, +Piece)
 %Verifica se o movimento de um determinado animal é válido
-valid_moviment(InitialPosition, FinalPosition, piece(mice,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, horizontal, _),
-    !.
-valid_moviment(InitialPosition, FinalPosition, piece(mice,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, vertical, _),
-    !.
-valid_moviment(InitialPosition, FinalPosition, piece(lion,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, horizontal, _),
-    !.
-valid_moviment(InitialPosition, FinalPosition, piece(elephant,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, horizontal, _),
-    !.
-valid_moviment(InitialPosition, FinalPosition, piece(elephant,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, vertical, _),
-    !.
-valid_moviment(InitialPosition, FinalPosition, piece(elephant,_)) :-
-    type_of_moviment(InitialPosition, FinalPosition, diagonal, _),
+valid_type_move(Move, Piece) :-
+    type_of_move(Move, TypeOfMove, _),
+    type_of_moviment(Piece, TypeOfMove),
     !.
 
 %jump_animals(+Board, +InitialPos, +FinalPos)
 %Verifica se o movimento de um animal implica passar por cima de outro animal
 %jump_animals(Board, pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)).
-jump_animals(Board, pos(InitialRow, InitialColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
+jump_animals(Board, Move) :-
+    type_of_move(Move, _, pos(DisplacementRow, DisplacementColumn)),
+    move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
     InitialRow1 is InitialRow + DisplacementRow,
     InitialColumn1 is InitialColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
@@ -92,4 +96,4 @@ jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(Displ
     \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
     CurrentRow1 is CurrentRow + DisplacementRow,
     CurrentColumn1 is CurrentColumn + DisplacementColumn,
-    jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+    jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).

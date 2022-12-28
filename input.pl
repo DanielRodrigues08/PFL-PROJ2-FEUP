@@ -1,5 +1,7 @@
 % Clears the terminal screen
 clear :- write('\e[2J').
+clear:-
+    write('\33\[2J').
 
 /**
  * invalidDigit(+C)
@@ -87,8 +89,7 @@ read_final_piece_pos(pos(Xf, Yf)):-
     read_until_between('Line?',0,9,Xf),
     read_until_between('Column?',0,9,Yf).
 
-clear:-
-    write('\33\[2J').
+
 
 ask_board_size(BoardSize):-
     write('Please enter the size of the board.'),

@@ -13,3 +13,7 @@ game_loop(GameState) :-
     display_game(NewGameState),
     game_loop(NewGameState), !.
 
+game_over(game_state(Board, Player), Player) :-
+    setof(pos(NRow, NColumn), (Sublist,Elem)^(nth0(NRow, Board, Sublist), member(Elem, Sublist), nth0(NColumn, Sublist, Elem), piece(_, Player), water_hole(Board, pos(NRow, NColumn))), Positions),
+    length(Positions, N),
+    N > 2.
