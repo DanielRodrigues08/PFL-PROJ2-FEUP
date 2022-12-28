@@ -46,13 +46,42 @@ read_until_between(Message,Min, Max, Value) :-
     format('Invalid option! Please choose between ~d and ~d~n', [Min, Max]),
     read_until_between(Message,Min, Max, Value).
 
-read_piece_pos(Xi-Yi):-
+choose_piece(game_state(Board, Player), pos(Xi, Yi)):-
+    read_piece_pos(pos(Xi, Yi)),
+    valid_piece(game_state(Board, Player), pos(Xi, Yi)), !.
+
+choose_piece(game_state(Board, Player), pos(Xi, Yi)):-
+    clear,
+    display_game(game_state(Board, Player)),
+    write('Invalid piece! Please choose another one'),
+    nl,
+    choose_piece(game_state(Board, Player), pos(Xi, Yi)).
+
+choose_final_pos(game_state(Board,_),  pos(Xi, Yi), pos(Xf, Yf)):-
+    read_final_piece_pos(pos(Xf, Yf)),
+    nth0(Xi,Board,Row),
+    nth0(Yi,Row,Elem),
+    valid_moviment(pos(Xi, Yi),pos(Xf, Yf), Elem).
+
+choose_final_pos(game_state(Board, Player), pos(Xi, Yi), pos(Xf, Yf)):-
+    clear,
+    display_game(game_state(Board, Player)),
+    write('Invalid position! Please choose another one'),
+    nl,
+    choose_final_pos(game_state(Board, Player), pos(Xi, Yi), pos(Xf, Yf)).
+
+choose_move(game_state(Board, Player), pos(Xi, Yi),pos(Xf, Yf)):-
+    choose_piece(game_state(Board, Player), pos(Xi, Yi)),
+    choose_final_pos(game_state(Board, Player), pos(Xi, Yi), pos(Xf, Yf)).
+
+
+read_piece_pos(pos(Xi, Yi)):-
     write('Pick a piece.'),
     nl,
     read_until_between('Line?',0,9,Xi),
     read_until_between('Column?',0,9,Yi).
 
-read_final_piece_pos(Xf-Yf):-
+read_final_piece_pos(pos(Xf, Yf)):-
     write('Chose the next position.'),
     nl,
     read_until_between('Line?',0,9,Xf),
@@ -60,3 +89,16 @@ read_final_piece_pos(Xf-Yf):-
 
 clear:-
     write('\33\[2J').
+
+ask_board_size(BoardSize):-
+    write('Please enter the size of the board.'),
+    readNumber(BoardSize),
+    BoardSize >= 10,
+    BoardSize mod 2 =:= 0,!.
+
+ask_board_size(BoardSize):-
+    clear,
+    write('Invalid size!'),
+    nl,
+    ask_board_size(BoardSize).
+

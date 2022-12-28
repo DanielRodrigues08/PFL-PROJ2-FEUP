@@ -11,7 +11,9 @@ option_selected(0) :-
     /*exit program upon input 0 in main menu.*/
     write('\n| Thanks for playing Barca |\n\n').
 
-option_selected(1). 
+option_selected(1):-
+    ask_board_size(BoardSize),
+    game_init(BoardSize). 
 option_selected(2). 
 option_selected(3). 
 option_selected(4). 
