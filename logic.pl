@@ -1,39 +1,40 @@
 %move(+GameState, +Move, -NewGameState)
 %Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
-move(GameState, Move, game_state(NewBoard, NewPlayer)) :-
-    valid_move(GameState, Move),
-    game_state(Board, Player) = Board,
-    move_position(OldPosition, NewPosition) = Move,
-    change_board(Board, OldPosition, NewPosition, NewBoard),
+move(game_state(Board, Player), move_position(InitialPos, FinalPos), game_state(NewBoard, NewPlayer)) :-
+    valid_move(game_state(Board, Player), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard),
     append([Player], [NewPlayer], [player1,player2]).
 
 %valid_move(+GameState, +Move)
 %Verifica se o Move é válido seguindo as regras do jogo
 
 %se o animal escolhido estiver preso
-vaild_move(GameState, Move) :-
+vaild_move(GameState, move_position(InitialPos, FinalPos)) :-
     valid_initial_positions(GameState, ValidInitialPositions),
-    member(Move, ValidInitialPositions),
-    move_position(InitialPos, FinalPos) = Move,
+    member(InitialPos, ValidInitialPositions),
     trap_animal(Board, InitialPos),
     get_element_board(Board, InitialPos, Piece),
     scared_animal(Board, Piece, FinalPos).
 
 valid_move(GameState, Move) :-
-    valid_initial_positions(GameState, ValidInitialPositions),
-    member(Move, ValidInitialPositions),
-    game_state(Board, _) = GameState,
     move_position(InitialPos, FinalPos) = Move,
+    valid_initial_positions(GameState, ValidInitialPositions),
+    member(InitialPos, ValidInitialPositions),
+    game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
     valid_type_move(Move, Piece),
     jump_animals(Board, Move),
     \+scared_animal(Board, Piece, FinalPos).
 
 
+%trap_animal(+Board, +Position)
+%Verifica se o animal presente na posição Position está preso
 trap_animal(Board, Position) :-
     scared_animal(Board, Position),
     trap_animal_aux(Board, Position).
 
+%trap_animal_aux(+Board, +Position)
+%Predicado auxiliar.
 trap_animal_aux(Board, Position) :-
     get_element_board(Board, Position, piece(Animal, _)),
     type_of_moviment(piece(Animal,_), TypeOfMoviment),
@@ -41,7 +42,7 @@ trap_animal_aux(Board, Position) :-
     adjacent_animals(Board, Position, Position2, _),
     !.
 
-%fear(+Piece, +Piece)
+%fear(+Piece1, +Piece2)
 %Verifica se uma peça(animal) tem medo de outra
 fear(piece(mouse, Player1), piece(lion, Player2)) :-
     dif(Player1, Player2).
@@ -50,7 +51,8 @@ fear(piece(lion, Player1), piece(elephant, Player2)) :-
 fear(piece(elephant, Player1), piece(mouse, Player2)) :-
     dif(Player1, Player2).
 
-
+%scared_animal(+Board, +Piece, +Position)
+%Verifica se a peça Piece situada na posição Position da tabuleiro está assustada
 scared_animal(Board, Piece, Position) :-
     adjacent_animals(Board, Position, _, Piece1),
     fear(Piece, Piece1).
@@ -60,10 +62,14 @@ scared_animal(Board, Position) :-
     adjacent_animals(Board, Position, _, Piece1),
     fear(Piece, Piece1).
 
+%adjacent_animals(+Board, +Position, ?Position2, -Piece)
+%Unifica a position2 e piece com as posições e animais, respetivamente, adjacentes ao animal que se encontra na posição Position. Também pode verficar se duas posições são adjacentes.
 adjacent_animals(Board, Position1, Position2, piece(Animal, Player)) :-
     adjacent_position(Position1, Position2),
     get_element_board(Board, Position2, piece(Animal,Player)).
 
+%valid_initial_positions(+GameState, -ListPositions)
+%Unifica ListPositions com uma lista das posições das peças que o utilizador pode mover
 valid_initial_positions(GameState, ListPositions) :-
     setof(Position, scared_animal(GameState, Positon), ListPositions),
     \+length(ListPositions, 0).
@@ -78,9 +84,8 @@ valid_type_move(Move, Piece) :-
     type_of_moviment(Piece, TypeOfMove),
     !.
 
-%jump_animals(+Board, +InitialPos, +FinalPos)
+%jump_animals(+Board, +Move)
 %Verifica se o movimento de um animal implica passar por cima de outro animal
-%jump_animals(Board, pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)).
 jump_animals(Board, Move) :-
     type_of_move(Move, _, pos(DisplacementRow, DisplacementColumn)),
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
@@ -89,7 +94,7 @@ jump_animals(Board, Move) :-
     jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
-%Functor auxilar do jump_animals
+%Predicado auxilar do jump_animals
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     \+get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
