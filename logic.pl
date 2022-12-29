@@ -1,9 +1,12 @@
 %move(+GameState, +Move, -NewGameState)
 %Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
-move(game_state(Board, Player), move_position(InitialPos, FinalPos), game_state(NewBoard, NewPlayer)) :-
-    valid_move(game_state(Board, Player), move_position(InitialPos, FinalPos)),
-    change_board(Board, InitialPos, FinalPos, NewBoard),
-    append([Player], [NewPlayer], [player1,player2]).
+move(game_state(Board, player1), move_position(InitialPos, FinalPos), game_state(NewBoard, player2)) :-
+    valid_move(game_state(Board, player1), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard).
+
+move(game_state(Board, player2), move_position(InitialPos, FinalPos), game_state(NewBoard, player1)) :-
+    valid_move(game_state(Board, player2), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard).
 
 %valid_move(+GameState, +Move)
 %Verifica se o Move é válido seguindo as regras do jogo
@@ -23,7 +26,7 @@ valid_move(GameState, Move) :-
     game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
     valid_type_move(Move, Piece),
-    jump_animals(Board, Move),
+    \+jump_animals(Board, Move),
     \+scared_animal(Board, Piece, FinalPos).
 
 
@@ -91,12 +94,13 @@ jump_animals(Board, Move) :-
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
     InitialRow1 is InitialRow + DisplacementRow,
     InitialColumn1 is InitialColumn + DisplacementColumn,
-    jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+    \+jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
 %Predicado auxilar do jump_animals
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     \+get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
+
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
     \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
     CurrentRow1 is CurrentRow + DisplacementRow,
