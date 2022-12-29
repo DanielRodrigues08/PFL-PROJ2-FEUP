@@ -1,9 +1,12 @@
 %move(+GameState, +Move, -NewGameState)
 %Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
-move(game_state(Board, Player), move_position(InitialPos, FinalPos), game_state(NewBoard, NewPlayer)) :-
-    valid_move(game_state(Board, Player), move_position(InitialPos, FinalPos)),
-    change_board(Board, InitialPos, FinalPos, NewBoard),
-    append([Player], [NewPlayer], [player1,player2]).
+move(game_state(Board, player1), move_position(InitialPos, FinalPos), game_state(NewBoard, player2)) :-
+    valid_move(game_state(Board, player1), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard).
+
+move(game_state(Board, player2), move_position(InitialPos, FinalPos), game_state(NewBoard, player1)) :-
+    valid_move(game_state(Board, player2), move_position(InitialPos, FinalPos)),
+    change_board(Board, InitialPos, FinalPos, NewBoard).
 
 %valid_move(+GameState, +Move)
 %Verifica se o Move é válido seguindo as regras do jogo
