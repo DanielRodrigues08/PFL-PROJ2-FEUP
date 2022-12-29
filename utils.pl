@@ -39,6 +39,14 @@ change_element_aux(List, NColumn, NewElement, NewList) :-
 
 %type_of_move(+Move, -TypeOfMoviment, +Displacement)
 %Indica o tipo de movimento(horizontal, vertical ou na diagonal) dada a posição inicial e final 
+type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn)), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
+    DisplacementRowAux is FinalRow - InitialRow,
+    DisplacementColumnAux is FinalColumn - InitialColumn,
+    abs(DisplacementRowAux) =:= abs(DisplacementColumnAux),
+    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
+    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
+    !.
+
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)), horizontal, pos(0, DisplacementColumn)) :-
     dif(InitialColumn, FinalColumn),
     DisplacementColumnAux is FinalColumn - InitialColumn,
@@ -51,13 +59,6 @@ type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, Initial
     DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
     !.
 
-type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn)), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
-    DisplacementRowAux is FinalRow - InitialRow,
-    DisplacementColumnAux is FinalColumn - InitialColumn,
-    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
-    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
-    DisplacementColumnAux =:= DisplacementRowAux,
-    !.
 
 %adjacent_position(+Pos1, ?Pos2)
 %Verifica se as posições Pos1 e Pos2 são adjacentes. Também pode unificar a Pos2 com uma posição adjacente a Pos1
