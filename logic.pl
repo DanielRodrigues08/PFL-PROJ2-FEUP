@@ -23,7 +23,7 @@ valid_move(GameState, Move) :-
     game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
     valid_type_move(Move, Piece),
-    jump_animals(Board, Move),
+    \+jump_animals(Board, Move),
     \+scared_animal(Board, Piece, FinalPos).
 
 
@@ -91,12 +91,13 @@ jump_animals(Board, Move) :-
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
     InitialRow1 is InitialRow + DisplacementRow,
     InitialColumn1 is InitialColumn + DisplacementColumn,
-    jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+    \+jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
 %Predicado auxilar do jump_animals
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     \+get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
+
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
     \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
     CurrentRow1 is CurrentRow + DisplacementRow,

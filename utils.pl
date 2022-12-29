@@ -33,9 +33,11 @@ change_element([H|T], pos(NRow, NColumn), NewElement, [H|R]) :-
 
 %change_element_aux(+List, +NColumn, +NewElement, -NewList)
 %Predicado auxiliar do chanhe_element. Responsável por substituir o elemento que ocupa a posição NColumn de uma lista.
-change_element_aux(List, NColumn, NewElement, NewList) :-
-    select(OldElement, List, NewElement, NewList),
-    nth0(NColumn, List, OldElement).
+change_element_aux([H|T], 0, NewElement, [NewElement | T]).
+change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
+    NColumn > 0,
+    NColumn1 is NColumn - 1,
+    change_element_aux(T, NColumn1, NewElement, R).
 
 %type_of_move(+Move, -TypeOfMoviment, +Displacement)
 %Indica o tipo de movimento(horizontal, vertical ou na diagonal) dada a posição inicial e final 
