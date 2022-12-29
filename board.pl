@@ -155,6 +155,8 @@ print_elem(water_hole, 'W',_,_).
 
 
 
+
+
 % print_n(+S, +N)
 print_n(_,0).
 print_n(S,N):-

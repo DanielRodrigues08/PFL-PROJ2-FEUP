@@ -59,6 +59,11 @@ type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalCo
     DisplacementColumnAux =:= DisplacementRowAux,
     !.
 
+sum_list([], 0).
+sum_list([X|Xs], Sum) :-
+    sum_list(Xs, Sum1),
+    Sum is X + Sum1.
+
 %adjacent_position(+Pos1, ?Pos2)
 %Verifica se as posições Pos1 e Pos2 são adjacentes. Também pode unificar a Pos2 com uma posição adjacente a Pos1
 adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2)) :-
@@ -103,3 +108,5 @@ type_of_moviment(piece(lion,_), diagonal).
 type_of_moviment(piece(elephant,_), horizontal).
 type_of_moviment(piece(elephant,_), vertical).
 type_of_moviment(piece(elephant,_), diagonal).
+
+
