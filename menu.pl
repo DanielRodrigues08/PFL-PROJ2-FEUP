@@ -17,6 +17,8 @@ option_selected(1):-
 option_selected(2). 
 option_selected(3). 
 option_selected(4). 
+option_selected(5):- display_instructions.
+
 
 exitGame :-
     clear, nl,
