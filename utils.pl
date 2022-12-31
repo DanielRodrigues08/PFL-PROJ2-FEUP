@@ -39,26 +39,34 @@ change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
     NColumn1 is NColumn - 1,
     change_element_aux(T, NColumn1, NewElement, R).
 
+abs(X, X) :- X #> 0.
+abs(X, Y) :- X #< 0, Y #= -X.
+abs(0,0).    
+
 %type_of_move(+Move, -TypeOfMoviment, +Displacement)
 %Indica o tipo de movimento(horizontal, vertical ou na diagonal) dada a posição inicial e final 
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, FinalColumn)), diagonal, pos(DisplacementRow, DisplacementColumn)) :-
-    DisplacementRowAux is FinalRow - InitialRow,
-    DisplacementColumnAux is FinalColumn - InitialColumn,
-    abs(DisplacementRowAux) =:= abs(DisplacementColumnAux),
-    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
-    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
+    DisplacementRowAux #= FinalRow - InitialRow,
+    DisplacementColumnAux #= FinalColumn - InitialColumn,
+    abs(DisplacementRowAux, DisplacementRowAux1),
+    abs(DisplacementColumnAux, DisplacementColumnAux1),
+    DisplacementColumnAux1 #= DisplacementRowAux1,
+    DisplacementRow #= DisplacementRowAux / DisplacementRowAux1,
+    DisplacementColumn #= DisplacementColumnAux / DisplacementColumnAux1,
     !.
 
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(InitialRow, FinalColumn)), horizontal, pos(0, DisplacementColumn)) :-
     dif(InitialColumn, FinalColumn),
-    DisplacementColumnAux is FinalColumn - InitialColumn,
-    DisplacementColumn is round(DisplacementColumnAux / abs(DisplacementColumnAux)),
+    DisplacementColumnAux #= FinalColumn - InitialColumn,
+    abs(DisplacementColumnAux,DisplacementColumnAux1),
+    DisplacementColumn #= DisplacementColumnAux / DisplacementColumnAux1,
     !.
 
 type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, InitialColumn)), vertical, pos(DisplacementRow, 0)) :-
     dif(InitialRow, FinalRow),
-    DisplacementRowAux is FinalRow - InitialRow,
-    DisplacementRow is round(DisplacementRowAux / abs(DisplacementRowAux)),
+    DisplacementRowAux #= FinalRow - InitialRow,
+    abs(DisplacementRowAux,DisplacementRowAux1),
+    DisplacementRow #= DisplacementRowAux / abs(DisplacementRowAux),
     !.
 
 

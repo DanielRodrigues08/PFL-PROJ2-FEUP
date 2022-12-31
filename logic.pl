@@ -92,8 +92,8 @@ valid_type_move(Move, Piece) :-
 jump_animals(Board, Move) :-
     type_of_move(Move, _, pos(DisplacementRow, DisplacementColumn)),
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
-    InitialRow1 is InitialRow + DisplacementRow,
-    InitialColumn1 is InitialColumn + DisplacementColumn,
+    InitialRow1 #= InitialRow + DisplacementRow,
+    InitialColumn1 #= InitialColumn + DisplacementColumn,
     \+jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
@@ -103,8 +103,8 @@ jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), 
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
     \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
-    CurrentRow1 is CurrentRow + DisplacementRow,
-    CurrentColumn1 is CurrentColumn + DisplacementColumn,
+    CurrentRow1 #= CurrentRow + DisplacementRow,
+    CurrentColumn1 #= CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 
