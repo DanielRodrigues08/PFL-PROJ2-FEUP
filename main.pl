@@ -8,6 +8,7 @@
 :- consult('menu.pl').
 :- consult('input.pl').
 :- consult('utils.pl').
+:- consult('ai.pl').
 
 play :-
     menu.
