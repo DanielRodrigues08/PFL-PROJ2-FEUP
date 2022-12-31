@@ -66,7 +66,7 @@ type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, Initial
     dif(InitialRow, FinalRow),
     DisplacementRowAux #= FinalRow - InitialRow,
     abs(DisplacementRowAux,DisplacementRowAux1),
-    DisplacementRow #= DisplacementRowAux / abs(DisplacementRowAux),
+    DisplacementRow #= DisplacementRowAux / DisplacementRowAux1,
     !.
 
 

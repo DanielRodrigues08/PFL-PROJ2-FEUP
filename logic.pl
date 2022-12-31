@@ -12,12 +12,12 @@ move(game_state(Board, player2), move_position(InitialPos, FinalPos), game_state
 %Verifica se o Move é válido seguindo as regras do jogo
 
 %se o animal escolhido estiver preso
-vaild_move(GameState, move_position(InitialPos, FinalPos)) :-
+/*vaild_move(GameState, move_position(InitialPos, FinalPos)) :-
     valid_initial_positions(GameState, ValidInitialPositions),
     member(InitialPos, ValidInitialPositions),
     trap_animal(Board, InitialPos),
     get_element_board(Board, InitialPos, Piece),
-    scared_animal(Board, Piece, FinalPos).
+    scared_animal(Board, Piece, FinalPos).*/
 
 valid_move(GameState, Move) :-
     move_position(InitialPos, FinalPos) = Move,
@@ -26,7 +26,7 @@ valid_move(GameState, Move) :-
     game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
     valid_type_move(Move, Piece),
-    \+jump_animals(Board, Move),
+    %\+jump_animals(Board, Move).
     \+scared_animal(Board, Piece, FinalPos).
 
 
@@ -85,6 +85,7 @@ valid_initial_positions(game_state(Board, Player), ListPositions) :-
 valid_type_move(Move, Piece) :-
     type_of_move(Move, TypeOfMove, _),
     type_of_moviment(Piece, TypeOfMove),
+    valid_type_move(Move, Piece),
     !.
 
 %jump_animals(+Board, +Move)
