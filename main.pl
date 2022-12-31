@@ -1,6 +1,7 @@
 :- use_module(library(lists)). % Load list library
 :- use_module(library(between)).
 :- use_module(library(clpfd)).
+:- use_module(library(random)).
 
 :- consult('board.pl').       
 :- consult('game.pl').
