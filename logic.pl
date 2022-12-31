@@ -25,8 +25,9 @@ valid_move(GameState, Move) :-
     member(InitialPos, ValidInitialPositions),
     game_state(Board, _) = GameState,
     get_element_board(Board, InitialPos, Piece),
-    valid_type_move(Move, Piece),
-    %\+jump_animals(Board, Move).
+    type_of_move(Move, TypeOfMove, Displacement),
+    type_of_moviment(Piece, TypeOfMove),
+    \+jump_animals(Board, Move, Displacement),
     \+scared_animal(Board, Piece, FinalPos).
 
 
@@ -85,31 +86,31 @@ valid_initial_positions(game_state(Board, Player), ListPositions) :-
 valid_type_move(Move, Piece) :-
     type_of_move(Move, TypeOfMove, _),
     type_of_moviment(Piece, TypeOfMove),
-    valid_type_move(Move, Piece),
     !.
 
-%jump_animals(+Board, +Move)
+%jump_animals(+Board, +Move, +TypeOfMove)
 %Verifica se o movimento de um animal implica passar por cima de outro animal
-jump_animals(Board, Move) :-
-    type_of_move(Move, _, pos(DisplacementRow, DisplacementColumn)),
-    move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
+jump_animals(Board, move_positon(pos(InitialRow, InitialColumn), FinalPosition), pos(DisplacementRow, DisplacementColumn)) :-
     InitialRow1 #= InitialRow + DisplacementRow,
     InitialColumn1 #= InitialColumn + DisplacementColumn,
-    \+jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+    jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
 %Predicado auxilar do jump_animals
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
-    \+get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
+    get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)),
+    !.
+
+jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
+    fail.
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
-    \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
+    get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)).
+
+jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
     CurrentRow1 #= CurrentRow + DisplacementRow,
     CurrentColumn1 #= CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
-
-
-
 
 coefficient(scared,0.2).
 coefficient(notScared,0.3).
