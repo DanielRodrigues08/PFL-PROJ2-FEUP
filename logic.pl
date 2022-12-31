@@ -94,8 +94,8 @@ valid_type_move(Move, Piece) :-
 %Verifica se o movimento de um animal implica passar por cima de outro animal
 jump_animals(Board, Move, pos(DisplacementRow, DisplacementColumn)) :-
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
-    InitialRow1 is InitialRow + DisplacementRow,
-    InitialColumn1 is InitialColumn + DisplacementColumn,
+    InitialRow1 #= InitialRow + DisplacementRow,
+    InitialColumn1 #= InitialColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
