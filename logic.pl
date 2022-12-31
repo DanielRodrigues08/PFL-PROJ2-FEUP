@@ -96,15 +96,17 @@ jump_animals(Board, Move, pos(DisplacementRow, DisplacementColumn)) :-
     move_position(pos(InitialRow, InitialColumn), FinalPosition) = Move,
     InitialRow1 is InitialRow + DisplacementRow,
     InitialColumn1 is InitialColumn + DisplacementColumn,
-    \+jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
+    jump_animals_aux(Board, pos(InitialRow1, InitialColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 %jump_animals_aux(+Board, +CurrentPos, +FinalPos, +typeOfMovement)
 %Predicado auxilar do jump_animals
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
-    \+get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
+    !, get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
-    \+get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)),
+    get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)), !.
+
+jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
     CurrentRow1 is CurrentRow + DisplacementRow,
     CurrentColumn1 is CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
