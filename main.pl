@@ -2,6 +2,7 @@
 :- use_module(library(between)).
 :- use_module(library(clpfd)).
 :- use_module(library(random)).
+:- use_module(library(system)).
 
 :- consult('board.pl').       
 :- consult('game.pl').

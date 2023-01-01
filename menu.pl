@@ -3,7 +3,7 @@
 menu :-
     repeat,
     display_menu,
-    read_until_between('Pick an option.', 0,5, Option),
+    read_until_between('Pick an option.', 0,7, Option),
     option_selected(Option).
 
 % case option ir exit
@@ -11,32 +11,11 @@ option_selected(0) :-
     /*exit program upon input 0 in main menu.*/
     write('\n| Thanks for playing Barca |\n\n').
 
-option_selected(1):-
+option_selected(7):- display_instructions, go_back(Input).
+
+option_selected(Num):-
     ask_board_size(BoardSize),
-    game_init(BoardSize). 
-option_selected(2). 
-option_selected(3). 
-option_selected(4). 
-option_selected(5):- display_instructions, go_back(Input).
-
-
-exitGame :-
-    clear, nl,
-    menuFill,
-    menuText('Thanks for playing!'),
-    menuFill.
-
-instructions :-
-    clear,
-    menuTitle('Instructions'),
-    menuEmptyLine,
-    displayInstructions,
-    menuEmptyLine,
-
-    menuFill, nl,
-    write('Press Enter to go back to the Main Menu'),
-    skip_line,
-    fail. % Go back to menu
+    game_init(BoardSize, Num). 
 
 
 % display menu
@@ -55,9 +34,11 @@ display_menu :-
     write('*                                                                 *'),nl,
     write('*        [1]  Human vs Human                                      *'),nl,
     write('*        [2]  Human vs Computer - Easy Mode                       *'),nl,
-    write('*        [3]  Human vs Computer - Difficult Mode                  *'),nl,
-    write('*        [4]  Computer vs Computer                                *'),nl,
-    write('*        [5]  Instructions                                        *'),nl,
+    write('*        [3]  Computer vs Human - Easy Mode                       *'),nl,
+    write('*        [4]  Human vs Computer - Difficult Mode                  *'),nl,
+    write('*        [5]  Computer vs Human - Difficult Mode                  *'),nl,
+    write('*        [6]  Computer vs Computer                                *'),nl,
+    write('*        [7]  Instructions                                        *'),nl,
     write('*        [0]  Exit                                                *'),nl,
     write('*                                                                 *'),nl,
     write('*******************************************************************'),nl,nl.
