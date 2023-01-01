@@ -74,9 +74,11 @@ adjacent_animals(Board, Position1, Position2, piece(Animal, Player)) :-
 
 %valid_initial_positions(+GameState, -ListPositions)
 %Unifica ListPositions com uma lista das posições das peças que o utilizador pode mover
-valid_initial_positions(GameState, ListPositions) :-
-    setof(Position, scared_animal(GameState, Positon), ListPositions),
-    \+length(ListPositions, 0).
+valid_initial_positions(game_state(Board, Player), ListPositions) :-
+    position_pieces(piece(_, Player), Board, ListPositions1),
+    findall(Position,(member(Position, ListPositions1), scared_animal(Board, Positon)), ListPositions),
+    \+length(ListPositions, 0),
+    !. 
 
 valid_initial_positions(game_state(Board, Player), ListPositions) :-
     position_pieces(piece(_, Player), Board, ListPositions).
