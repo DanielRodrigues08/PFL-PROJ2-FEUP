@@ -115,10 +115,10 @@ jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(Displ
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
 
-coefficient(scared,0.2).
-coefficient(notScared,0.3).
-coefficient(inWaterHole,0.5).
-coefficient(trapped,0.1).
+coefficient(scared,0.02).
+coefficient(notScared,0.2).
+coefficient(inWaterHole,0.77).
+coefficient(trapped,0.01).
 
 %value(+GameState, +Player, -Value)
 value(game_state(Board, Player), NPlayer, Value):-
