@@ -3,7 +3,7 @@
 menu :-
     repeat,
     display_menu,
-    read_until_between('Pick an option.', 0,4, Option),
+    read_until_between('Pick an option.', 0,5, Option),
     option_selected(Option).
 
 % case option ir exit
@@ -17,7 +17,7 @@ option_selected(1):-
 option_selected(2). 
 option_selected(3). 
 option_selected(4). 
-option_selected(5):- display_instructions.
+option_selected(5):- display_instructions, go_back(Input).
 
 
 exitGame :-
@@ -103,16 +103,13 @@ display_game_over :-
     write('*                                                             *'),nl,
     write('***************************************************************'),nl,nl.
 
+go_back(Input):-
+    read_option('\nPress [0] to go back to menu.',0, Value),
+    back_menu(Option).
 
-/*goToMenu(Input):-
-    write('\nPress [0] to go back to MAIN MENU.\n\n'),
-    read(Input),
-    travelBack(Input).
-
-travelBack(0):-
-    return to menu function
+back_menu(0):-
     menu.
-*/
+
 
 display_instructions :-
     write('------------------------------ Game Board ------------------------------'),nl,
@@ -146,4 +143,4 @@ display_instructions :-
     nl,nl,
     write('The winner is the first player to get 3 of their animals on the watering'),nl,  
     write('holes at the same time. A player can still win if animals are scared or'),nl,
-    write('trapped.').
+    write('trapped.'),nl.

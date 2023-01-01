@@ -15,23 +15,32 @@ invalidDigit(C) :-
 validDigit(C) :- \+ invalidDigit(C), !.
 
 /**
- * readNumber(-X)
+ * read_number(-X)
  *
  * Reads a number from input
  */
-readNumber(X) :- readNumber(X, 0).
+read_number(X) :- read_number(X, 0).
 
-readNumber(X, X) :-
+read_number(X, X) :-
     peek_code(10), !,
     skip_line.
 
-readNumber(X, Acc) :-
+read_number(X, Acc) :-
     get_code(C),
     validDigit(C),
     Real is C - 48,
     Tmp is Acc * 10,
     Acc1 is Tmp + Real,
-    readNumber(X, Acc1).
+    read_number(X, Acc1).
+
+read_option(Message,Option, Value) :-
+    write(Message),
+    read_number(Value),
+    Option =:= Value, !.
+
+read_option(Message,Option, Value) :-
+    write('Invalid option!'),
+    read_option(Message,Option, Value).
 
 /**
  * read_until_between(+Message, +Min, +Max, -Value)
@@ -41,7 +50,7 @@ readNumber(X, Acc) :-
 read_until_between(Message,Min, Max, Value) :-
     write(Message),
     format('[~d-~d]: ', [Min, Max]),
-    readNumber(Value),
+    read_number(Value),
     between(Min, Max, Value), !.
 
 read_until_between(Message,Min, Max, Value) :-
@@ -89,7 +98,7 @@ read_final_piece_pos(pos(Xf, Yf)):-
 ask_player(Number):-
     write('Which player do you want to be? (1 or 2)'),
     nl,
-    readNumber(Number),
+    read_number(Number),
     Number >= 1,
     Number < 3, !.
 
@@ -103,7 +112,7 @@ ask_player(Number):-
 ask_board_size(BoardSize):-
     write('Please enter the size of the board.'),
     nl,
-    readNumber(BoardSize),
+    read_number(BoardSize),
     BoardSize >= 10,
     BoardSize mod 2 =:= 0,!.
 

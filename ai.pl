@@ -33,11 +33,6 @@ try_move(game_state(Board, Player), Move, Value) :-
    move(game_state(Board, Player), Move, NewGameState),
    value(NewGameState, Player, Value).
 
-/*best_move(ListOfMoves, Results, BestMove) :-
-    max_member(MaxResult, Results),
-    nth0(Index, Results, MaxResult),
-    nth0(Index, ListOfMoves, BestMove).*/
-
 best_move(ListOfMoves, Results, BestMove) :-
     max_member(MaxResult, Results),
     findall(Index, nth0(Index, Results, MaxResult), Indices),
