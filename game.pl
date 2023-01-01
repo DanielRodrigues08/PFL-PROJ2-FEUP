@@ -1,10 +1,14 @@
-ame_init(BoardSize, Mode) :-
+game_init(BoardSize, Mode) :-
     initial_state(BoardSize, GameState),
     display_game(GameState),
     game_loop(GameState, Mode).
 
-game_loop(GameState, _) :-
-    game_over(GameState, Winner),
+game_loop(game_state(Board, player2), _) :-
+    game_over(Board, player1),
+    !.
+
+game_loop(game_state(Board, player1), _) :-
+    game_over(Board, player2),
     !.
     
 % Human - Human
@@ -103,7 +107,8 @@ game_loop(GameState,Mode) :-
     write('Invalid move!'),
     game_loop(GameState,Mode),!.
 
-game_over(game_state(Board, _), Player) :-
-    setof(pos(NRow, NColumn), (Sublist,Elem)^(nth0(NRow, Board, Sublist), member(Elem, Sublist), nth0(NColumn, Sublist, piece(_, Player)), water_hole(Board, pos(NRow, NColumn))), Positions),
-    length(Positions, N),
+game_over(Board, Player) :-
+    position_pieces(piece(_,Player), Board, Positions),
+    findall(Pos, (member(Pos, Positions), water_hole(Board, Pos)), WaterHolePositions),
+    length(WaterHolePositions, N),
     N > 2.
