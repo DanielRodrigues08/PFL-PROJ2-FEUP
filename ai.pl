@@ -1,3 +1,5 @@
+%valid_moves(+GameState, -ListOfMoves)
+%Unifica a variável ListOfMoves com a lista de todas as jogadas possíveis para o GameState
 valid_moves(GameState, ListOfMoves) :-
    game_state(Board, _) = GameState,
    length(Board, LengthBoard),
@@ -5,18 +7,13 @@ valid_moves(GameState, ListOfMoves) :-
    findall(pos(NRow,NColumn), (between(0, LengthBoard1,NRow), between(0, LengthBoard1, NColumn)), ListFinalMoves),
    findall(move_position(Initial, Final), (member(Final, ListFinalMoves), valid_move(GameState, move_position(Initial, Final))), ListOfMoves).
 
-%computer_move(+GameState, +Level, -Move)
-computer_move(GameState, easy, Move) :-
+%choose_move(+GameState, +Level, -Move)
+%Unifica a variável Move com uma jogada que o computador irá fazer.
+choose_move(GameState, easy, Move) :-
     valid_moves(GameState, ListOfMoves),
     random_member(Move, ListOfMoves).
 
-    
-%computer_move(+GameState, +Level, -Move)
-computer_move(GameState, easy, Move) :-
-    valid_moves(GameState, ListOfMoves),
-    random_member(Move, ListOfMoves).
-
-computer_move(GameState, difficult , Move) :-
+choose_move(GameState, difficult , Move) :-
    valid_moves(GameState, ListOfMoves),
    try_list_of_moves(GameState, ListOfMoves, Results),
    best_move(ListOfMoves, Results, Move).
