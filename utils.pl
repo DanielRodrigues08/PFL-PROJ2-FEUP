@@ -33,7 +33,7 @@ change_element([H|T], pos(NRow, NColumn), NewElement, [H|R]) :-
 
 %change_element_aux(+List, +NColumn, +NewElement, -NewList)
 %Predicado auxiliar do chanhe_element. Responsável por substituir o elemento que ocupa a posição NColumn de uma lista.
-change_element_aux([H|T], 0, NewElement, [NewElement | T]).
+change_element_aux([_|T], 0, NewElement, [NewElement | T]).
 change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
     NColumn > 0,
     NColumn1 is NColumn - 1,

@@ -62,7 +62,7 @@ write_initial_positions(game_state(Board, _),ListPositions) :-
     nl, 
     write_initial_positions_aux(game_state(Board, _),ListPositions).
 
-write_initial_positions_aux(game_state(Board, _),[]).
+write_initial_positions_aux(game_state(_, _),[]).
 write_initial_positions_aux(game_state(Board, _),[pos(Xi,Yi) | Positions]):-
     nth0(Xi,Board,Row),
     nth0(Yi,Row,Elem),

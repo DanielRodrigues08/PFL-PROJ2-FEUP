@@ -106,7 +106,7 @@ jump_animals(Board, Move, pos(DisplacementRow, DisplacementColumn)) :-
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     !, get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
 
-jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
+jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, _) :-
     get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)), !.
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
@@ -121,7 +121,7 @@ coefficient(inWaterHole,0.77).
 coefficient(trapped,0.01).
 
 %value(+GameState, +Player, -Value)
-value(game_state(Board, Player), NPlayer, Value):-
+value(game_state(Board, _), NPlayer, Value):-
     position_pieces(piece(_, NPlayer), Board, ListPositions),
     value_aux(Board, ListPositions,Value,0).
 
