@@ -23,7 +23,8 @@ choose_move(GameState, difficult , Move) :-
 try_list_of_moves(GameState, ListOfMoves, Results) :-
    try_moves(GameState, ListOfMoves, Results, []).
 
-try_moves(_, [], Acc, Acc).
+try_moves(_, [], Results, Acc):-
+   reverse(Acc,Results).
 try_moves(GameState, [Move|Rest], Results, Acc) :-
    try_move(GameState, Move, Value),
    try_moves(GameState, Rest, Results, [Value|Acc]).
@@ -78,16 +79,16 @@ distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
    DeltaY is NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
-coefficient_at_position(Board,move_position(IPos,_), Pos, 0) :-
+coefficient_at_position(Board,move_position(IPos,_), Pos, -200) :-
    water_hole(Board, IPos),!.
+coefficient_at_position(Board,_, Pos, C) :-
+   water_hole(Board, Pos),
+   coefficient(inWaterHole, C).
 coefficient_at_position(Board,_,Pos, C) :-
    find_water_holes(Board,ListWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).
-coefficient_at_position(Board,_, Pos, C) :-
-   water_hole(Board, Pos),
-   coefficient(inWaterHole, C).
 coefficient_at_position(Board,_, Pos, C) :-
    trap_animal(Board, Pos),
    coefficient(trapped, C).

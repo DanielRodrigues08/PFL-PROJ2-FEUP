@@ -1,4 +1,4 @@
-game_init(BoardSize, Mode) :-
+ame_init(BoardSize, Mode) :-
     initial_state(BoardSize, GameState),
     display_game(GameState),
     game_loop(GameState, Mode).
@@ -97,6 +97,7 @@ game_loop(game_state(Board, player2), 5) :-
 game_loop(GameState,6) :-
     choose_move(GameState, difficult, Move),
     move(GameState, Move, NewGameState),
+    nl,
     display_game(NewGameState),
     sleep(3),
     game_loop(NewGameState,6),!.
