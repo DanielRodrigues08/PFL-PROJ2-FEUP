@@ -1,22 +1,27 @@
 
-% main menu
+%menu
+%Main menu
 menu :-
     repeat,
     display_menu,
     read_until_between('Pick an option.', 0,7, Option),
     option_selected(Option).
 
-% case option ir exit
-option_selected(0) :- display_end.
-    /*exit program upon input 0 in main menu.*/
+% option_selected(+Option)
+% Seleciona o mmenu indicado pela opção
+option_selected(0) :- 
+    display_end.
 
-
-option_selected(7):- display_instructions, go_back.
+option_selected(7):- 
+    display_instructions, 
+    go_back.
 
 option_selected(Num):-
     ask_board_size(BoardSize),
     game_init(BoardSize, Num). 
 
+% display_end
+% Mostra a mensagem de despedida e encerra o jogo
 display_end:-
         nl,nl, clear,
         write(' **************************************************************'),nl,
@@ -30,7 +35,8 @@ display_end:-
         write('***************************************************************'),nl.
     
 
-% display menu
+% display_menu
+% Mostra o menu principal
 display_menu :-
     nl,nl, clear,
     write(' ******************************************************************'),nl,
@@ -55,7 +61,8 @@ display_menu :-
     write('*                                                                 *'),nl,
     write('*******************************************************************'),nl,nl.
 
-% display game over
+% display_end_game
+% Mostra a mensagem de end game indicando o vencedor
 display_end_game(Winner):-
     nl,nl, clear,
     write(' **************************************************************'),nl,
@@ -76,6 +83,8 @@ display_end_game(Winner):-
     write('***************************************************************'),nl,
     go_back.
 
+%go_back
+% Pergunta ao utilizador se quer voltar ao 
 go_back:-
     read_option('\nPress [0] to go back to menu.',0, Value),
     back_menu(Option).
