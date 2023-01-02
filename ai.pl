@@ -94,26 +94,21 @@ get_the_empty_aux(Board,  [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
    get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, Acc).
 
 coefficient_at_position(Board,move_position(IPos,_), Pos, -200) :-
-   write('1'),
    \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
 coefficient_at_position(Board,_, Pos, C) :-
-   write('2'),
    water_hole(Board, Pos),
    coefficient(inWaterHole, C).
 coefficient_at_position(Board,_,Pos, C) :-
-   write('3'),
    find_water_holes(Board,ListWaterHoles),
    %get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).
 coefficient_at_position(Board,_, Pos, C) :-
-   write('4'),
    trap_animal(Board, Pos),
    coefficient(trapped, C).
 coefficient_at_position(Board,_, Pos, C) :-
-   write('5'),
    scared_animal(Board, Pos),
    coefficient(scared, C).
    

@@ -1,4 +1,4 @@
-%move(+GameState, +Move, -NewGameState)
+move(+GameState, +Move, -NewGameState)
 %Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
 move(game_state(Board, player1), move_position(InitialPos, FinalPos), game_state(NewBoard, player2)) :-
     valid_move(game_state(Board, player1), move_position(InitialPos, FinalPos)),
@@ -43,8 +43,7 @@ trap_animal(Board, Position) :-
 trap_animal_aux(Board, Position) :-
     get_element_board(Board, Position, piece(Animal, _)),
     type_of_moviment(piece(Animal,_), TypeOfMoviment),
-    
-    (Position, Position2, TypeOfMoviment),
+    adjacent_position(Position, Position2, TypeOfMoviment),
     adjacent_animals(Board, Position, Position2, _),
     !.
 
