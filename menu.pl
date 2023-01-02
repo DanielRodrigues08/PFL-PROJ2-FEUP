@@ -86,8 +86,8 @@ display_end_game(Winner):-
 %go_back
 % Pergunta ao utilizador se quer voltar ao 
 go_back:-
-    read_option('\nPress [0] to go back to menu.',0, Value),
-    back_menu(Option).
+    read_option('\nPress [0] to go back to menu.',0, _),
+    back_menu(0).
 
 back_menu(0):-
     menu.

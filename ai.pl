@@ -36,7 +36,6 @@ try_move(game_state(Board, Player), Move, Value) :-
 best_move(ListOfMoves, Results, BestMove) :-
     max_member(MaxResult, Results),
     findall(Index, nth0(Index, Results, MaxResult), Indices),
-    length(Indices, NumIndices),
     random_member(Index, Indices),
     nth0(Index, ListOfMoves, BestMove).
 
@@ -48,8 +47,6 @@ coefficient(Distance, Value):-
    number(Distance),
    Distance > 0,
    Value is 1/Distance.
-coefficient(_, 2):-
-   number(Distance).
    
 %value(+GameState, +Player, -Value)
 value(game_state(Board, _), NPlayer, Move, Value):-
@@ -57,8 +54,7 @@ value(game_state(Board, _), NPlayer, Move, Value):-
    value_aux(Board,ListOfPositions,Move,Value,0).
    
    %value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [],Move, Value, Aux):- Value is Aux/6.
-
+value_aux(_, [],_, Value, Aux):- Value is Aux/6.
 value_aux(Board, [Pos|Positions],Move, Value, Aux):-
     findall(C, coefficient_at_position(Board,Move, Pos, C), Coefficients),
     sum_list(Coefficients, CoefficientSum),
@@ -68,7 +64,7 @@ value_aux(Board, [Pos|Positions],Move, Value, Aux):-
 list_of_distances(PositionMove, ListOfPositions, Results) :-
     distances(PositionMove, ListOfPositions, Results, []).
         
-distances(PositionMove, [], Acc, Acc).
+distances(_, [], Acc, Acc).
 distances(PositionMove, [Position|Rest], Results, Acc) :-
     distance(PositionMove, Position, Value),
     distances(PositionMove, Rest, Results, [Value|Acc]).
@@ -78,22 +74,8 @@ distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
    DeltaY is NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
-get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles):-
-   get_the_empty_aux(Board, ListOfPositions, ListOfEmptyWaterHoles, []).
 
-get_the_empty_aux(_, [], Acc, Acc).
-
-get_the_empty_aux(Board, [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
-   nth0(Row,Board, Line),
-   nth0(Col,Line,Elem),
-   print_elem(Elem, 'W',_,_),
-
-get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, [pos(Row,Col)|Acc]).
-
-get_the_empty_aux(Board,  [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
-   get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, Acc).
-
-coefficient_at_position(Board,move_position(IPos,_), Pos, -200) :-
+coefficient_at_position(Board,move_position(IPos,_), _, -200) :-
    \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
 coefficient_at_position(Board,_, Pos, C) :-
@@ -101,7 +83,6 @@ coefficient_at_position(Board,_, Pos, C) :-
    coefficient(inWaterHole, C).
 coefficient_at_position(Board,_,Pos, C) :-
    find_water_holes(Board,ListWaterHoles),
-   %get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).
@@ -111,4 +92,3 @@ coefficient_at_position(Board,_, Pos, C) :-
 coefficient_at_position(Board,_, Pos, C) :-
    scared_animal(Board, Pos),
    coefficient(scared, C).
-   

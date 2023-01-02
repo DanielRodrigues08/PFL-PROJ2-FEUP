@@ -9,14 +9,9 @@ get_element_board(Board, pos(NRow, NColumn), Elem) :-
     nth0(NRow, Board, Row),
     nth0(NColumn, Row, Elem).
 
-not_inst(Var):-
-    \+(\+(Var=0)),
-    \+(\+(Var=1)).
-
 %position_pieces(+Elem, +Board, -Positions)
 %Unifica Positions com a lista de todas as posições do Elem presente no Board 
 position_pieces(Elem, Board, Positions) :-
-    \+not_inst(Board),
     setof(pos(NRow, NColumn), (Sublist,Elem)^(nth0(NRow, Board, Sublist), member(Elem, Sublist), nth0(NColumn, Sublist, Elem)), Positions).
 
 %change_board(+Board, +OldPositon, +NewPosition, -NewBoard)
@@ -43,7 +38,7 @@ change_element([H|T], pos(NRow, NColumn), NewElement, [H|R]) :-
 
 %change_element_aux(+List, +NColumn, +NewElement, -NewList)
 %Predicado auxiliar do chanhe_element. Responsável por substituir o elemento que ocupa a posição NColumn de uma lista.
-change_element_aux([H|T], 0, NewElement, [NewElement | T]).
+change_element_aux([_|T], 0, NewElement, [NewElement | T]).
 change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
     NColumn > 0,
     NColumn1 is NColumn - 1,

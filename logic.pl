@@ -1,5 +1,5 @@
-move(+GameState, +Move, -NewGameState)
-%Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
+% move(+GameState, +Move, -NewGameState)
+% Move uma peça de uma posição para outra retorndo um novo game_state (caso o "move" seja válido)
 move(game_state(Board, player1), move_position(InitialPos, FinalPos), game_state(NewBoard, player2)) :-
     valid_move(game_state(Board, player1), move_position(InitialPos, FinalPos)),
     change_board(Board, InitialPos, FinalPos, NewBoard).
@@ -106,7 +106,7 @@ jump_animals(Board, Move, pos(DisplacementRow, DisplacementColumn)) :-
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     !, get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
 
-jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, _) :-
+jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), _, _) :-
     get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)), !.
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
