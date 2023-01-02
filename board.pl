@@ -1,4 +1,3 @@
-:- use_module(library(lists)).
 
 %initial_state(+Size, -GameState)
 % Esta Functor verifica o size (tem de ser par e superior a 10) e chama a Functor responsável pela criação do tabuleiro.

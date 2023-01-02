@@ -30,7 +30,7 @@ try_moves(GameState, [Move|Rest], Results, Acc) :-
 
 try_move(game_state(Board, Player), Move, Value) :-
    move(game_state(Board, Player), Move, NewGameState),
-   value(NewGameState, Player, Value).
+   value(NewGameState, Player, Move, Value).
 
 best_move(ListOfMoves, Results, BestMove) :-
     max_member(MaxResult, Results),
@@ -41,26 +41,29 @@ best_move(ListOfMoves, Results, BestMove) :-
 
 
 coefficient(scared,-1).
-coefficient(inWaterHole,0.98).
+coefficient(inWaterHole,10000).
 coefficient(trapped,-2).
-coefficient(0.0, 2).
 coefficient(Distance, Value):-
-   Value #= 1/Distance.
+   number(Distance),
+   Distance > 0,
+   Value is 1/Distance.
+coefficient(_, 2):-
+   number(Distance).
    
 %value(+GameState, +Player, -Value)
-value(game_state(Board, _), NPlayer, Value):-
+value(game_state(Board, _), NPlayer, Move, Value):-
    position_pieces(piece(_,NPlayer),Board,ListOfPositions),
-   value_aux(Board,ListOfPositions,Value,0).
+   value_aux(Board,ListOfPositions,Move,Value,0).
 
    
    %value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [], Value, Aux):- Value is Aux/6.
+value_aux(_, [],Move, Value, Aux):- Value is Aux/6.
 
-value_aux(Board, [Pos|Positions], Value, Aux):-
-    findall(C, coefficient_at_position(Board, Pos, C), Coefficients),
+value_aux(Board, [Pos|Positions],Move, Value, Aux):-
+    findall(C, coefficient_at_position(Board,Move, Pos, C), Coefficients),
     sum_list(Coefficients, CoefficientSum),
     NewAux is Aux + CoefficientSum,
-    value_aux(Board, Positions, Value, NewAux).
+    value_aux(Board, Positions, Move, Value, NewAux).
    
 list_of_distances(PositionMove, ListOfPositions, Results) :-
     distances(PositionMove, ListOfPositions, Results, []).
@@ -71,22 +74,24 @@ distances(PositionMove, [Position|Rest], Results, Acc) :-
     distances(PositionMove, Rest, Results, [Value|Acc]).
         
 distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
-   DeltaX #= NumRow2 - NumRow1,
-   DeltaY #= NumCol2 - NumCol1,
+   DeltaX is NumRow2 - NumRow1,
+   DeltaY is NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
-coefficient_at_position(Board, Pos, C) :-
+coefficient_at_position(Board,move_position(IPos,_), Pos, 0) :-
+   water_hole(Board, IPos),!.
+coefficient_at_position(Board,_,Pos, C) :-
    find_water_holes(Board,ListWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).
-coefficient_at_position(Board, Pos, C) :-
+coefficient_at_position(Board,_, Pos, C) :-
    water_hole(Board, Pos),
    coefficient(inWaterHole, C).
-coefficient_at_position(Board, Pos, C) :-
+coefficient_at_position(Board,_, Pos, C) :-
    trap_animal(Board, Pos),
    coefficient(trapped, C).
-coefficient_at_position(Board, Pos, C) :-
+coefficient_at_position(Board,_, Pos, C) :-
    scared_animal(Board, Pos),
    coefficient(scared, C).
    
