@@ -12,6 +12,8 @@
 :- consult('utils.pl').
 :- consult('ai.pl').
 
+%play
+%Inicia o jogo
 play :-
     menu.
 
