@@ -21,7 +21,6 @@ choose_move(GameState, difficult , Move) :-
    best_move(ListOfMoves, Results, Move).
 
 try_list_of_moves(GameState, ListOfMoves, Results) :-
-   write(ListOfMoves),
    try_moves(GameState, ListOfMoves, Results, []).
 
 try_moves(_, [], Results, Acc):-
@@ -56,7 +55,6 @@ coefficient(_, 2):-
 value(game_state(Board, _), NPlayer, Move, Value):-
    position_pieces(piece(_,NPlayer),Board,ListOfPositions),
    value_aux(Board,ListOfPositions,Move,Value,0).
-
    
    %value_aux(+Board, +Positions, -Value, +Aux)
 value_aux(_, [],Move, Value, Aux):- Value is Aux/6.
@@ -96,21 +94,26 @@ get_the_empty_aux(Board,  [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
    get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, Acc).
 
 coefficient_at_position(Board,move_position(IPos,_), Pos, -200) :-
+   write('1'),
    \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
 coefficient_at_position(Board,_, Pos, C) :-
+   write('2'),
    water_hole(Board, Pos),
    coefficient(inWaterHole, C).
 coefficient_at_position(Board,_,Pos, C) :-
+   write('3'),
    find_water_holes(Board,ListWaterHoles),
    %get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).
 coefficient_at_position(Board,_, Pos, C) :-
+   write('4'),
    trap_animal(Board, Pos),
    coefficient(trapped, C).
 coefficient_at_position(Board,_, Pos, C) :-
+   write('5'),
    scared_animal(Board, Pos),
    coefficient(scared, C).
    
