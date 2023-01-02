@@ -1,4 +1,4 @@
-%clear 
+clear 
 %Limpa o terminal
 clear :- write('\e[2J').
 clear:-

@@ -19,12 +19,12 @@ choose_move(GameState, difficult , Move) :-
    best_move(ListOfMoves, Results, Move).
 
 %try_list_of_moves(+GameState, +ListofMoves, -Results)
-%
+%Cria uma lista com todas as avaliações de todos os possíveis moves 
 try_list_of_moves(GameState, ListOfMoves, Results) :-
    try_moves(GameState, ListOfMoves, Results, []).
 
 %try_moves(+GameState, +ListOfMoves, +Results, +Acc)
-%
+%Realiza o predicado try_move em cada elemento da lista de moves
 try_moves(_, [], Results, Acc):-
    reverse(Acc,Results).
 try_moves(GameState, [Move|Rest], Results, Acc) :-
@@ -32,13 +32,13 @@ try_moves(GameState, [Move|Rest], Results, Acc) :-
    try_moves(GameState, Rest, Results, [Value|Acc]).
 
 %try_move(+GameState, +Move, -Value)
-%
+%Simula um move e calcula a avaliação do estado de jogo que esse move irá criar
 try_move(game_state(Board, Player), Move, Value) :-
    move(game_state(Board, Player), Move, NewGameState),
    value(NewGameState, Player, Move, Value).
 
 %best_move(+ListOfMoves, +Results, -BestMove)
-%
+%Escolhe o o move com a melhor avaliação
 best_move(ListOfMoves, Results, BestMove) :-
     max_member(MaxResult, Results),
     findall(Index, nth0(Index, Results, MaxResult), Indices),
@@ -46,7 +46,7 @@ best_move(ListOfMoves, Results, BestMove) :-
     nth0(Index, ListOfMoves, BestMove).
 
 %coefficient(+Type, -Value)
-%
+% Instanciação dos coeficientes
 coefficient(scared,-1).
 coefficient(inWaterHole,10000).
 coefficient(trapped,-2).
@@ -56,7 +56,7 @@ coefficient(Distance, Value):-
    Value is 1/Distance.
    
 %value(+GameState, +Player, +Move, -Value)
-%
+%Formula uma avaliação de uma estado de jogo na perspetiva de um jogador
 value(game_state(Board, _), NPlayer, Move, Value):-
    position_pieces(piece(_,NPlayer),Board,ListOfPositions),
    value_aux(Board,ListOfPositions,Move,Value,0).
@@ -71,13 +71,13 @@ value_aux(Board, [Pos|Positions],Move, Value, Aux):-
     NewAux is Aux + CoefficientSum,
     value_aux(Board, Positions, Move, Value, NewAux).
 
-%list_of_distances(...)
-%
+%list_of_distances(+PositionMove, +ListOfPositions, -Results)
+%Cria uma lista das distâncias entre os pontos da lista e um ponto
 list_of_distances(PositionMove, ListOfPositions, Results) :-
     distances(PositionMove, ListOfPositions, Results, []).
 
-%distance(...)
-%     
+%distance(+PositionMove, +ListOfPositions, -Results, +Acc)
+% Auxilia o predicado list_of_distances    
 distances(_, [], Acc, Acc).
 distances(PositionMove, [Position|Rest], Results, Acc) :-
     distance(PositionMove, Position, Value),
@@ -89,7 +89,7 @@ distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
 %coefficient_at_position(+Board, +Move, +Pos, -Value)
-%
+% Determina o coeficiente em diferentes situações
 coefficient_at_position(Board,move_position(IPos,_), _, -200) :-
    \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
