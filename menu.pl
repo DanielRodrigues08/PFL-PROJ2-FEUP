@@ -89,10 +89,13 @@ go_back:-
     read_option('\nPress [0] to go back to menu.',0, _),
     back_menu(0).
 
+%back_menu
+%Volta ao menu principal
 back_menu(0):-
     menu.
 
-
+%display_instructions
+%Mostra as instruções do jogo
 display_instructions :-
     write('------------------------------ Game Board ------------------------------'),nl,
     nl,nl,

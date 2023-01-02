@@ -1,6 +1,6 @@
 
 %initial_state(+Size, -GameState)
-% Esta Functor verifica o size (tem de ser par e superior a 10) e chama a Functor responsável pela criação do tabuleiro.
+% Este predicado verifica o size (tem de ser par e superior a 10) e chama a predicado responsável pela criação do tabuleiro.
 % Retorna o estado do jogo, que consiste num termo composto game_state que tem o estado atual do tabuleiro e a vez do jogador (player1 ou player2)
 initial_state(Size, game_state(Board, player1)) :-
     Size >= 10,
@@ -8,13 +8,13 @@ initial_state(Size, game_state(Board, player1)) :-
     create_board(Size, Board).
 
 %create_board(+Size, -Board)
-% Esta Functor é responsável pela criação do tabuleiro
-% Recorre a uma funcção auxiliar permitindo a "tail recursion" aumentando a eficiência
+% Este predicado é responsável pela criação do tabuleiro
+% Recorre a um predicado auxiliar permitindo a "tail recursion", aumentando a eficiência
 create_board(Size, Board) :-
     create_board_aux(Size, Size, [], Board).
 
 %create_board_aux(+Size, ?NRow, ?Acc, -Board)
-%Functor auxiliar da create_board
+%Predicado auxiliar da create_board
 create_board_aux(_, 0, Acc, Acc) :- !.
 create_board_aux(Size, NRow, Acc, Board) :-
     NRow > 0,
@@ -23,12 +23,12 @@ create_board_aux(Size, NRow, Acc, Board) :-
     create_board_aux(Size, NRow1, [Row | Acc], Board).
 
 %create_row(+Size, ?NRow, -Row)
-%% Recorre a uma funcção auxiliar permitindo a "tail recursion" aumentando a eficiência
+%%Recorre a um predicado auxiliar permitindo a "tail recursion" aumentando a eficiência
 create_row(Size, NRow, Row) :-
     create_row_aux(Size, NRow, Size, [], Row).
 
 %create_row_aux(+Size, +NRow, ?NColumn, ?Acc, -Row)
-%Functor auxiliar da create_row
+%Predicado auxiliar da create_row
 create_row_aux(_, _, 0, Acc, Acc) :- !.
 create_row_aux(Size, NRow, NColumn, Acc, Row) :-
     NColumn > 0,
@@ -37,7 +37,7 @@ create_row_aux(Size, NRow, NColumn, Acc, Row) :-
     create_row_aux(Size, NRow, NColumn1, [Piece | Acc], Row).
 
 %decide_piece(+Size, +NRow, +NColumn, -Piece)
-%Functor que retorna o tipo de peça que ocupa uma determinada posição do tabuleiro no estado inicial
+%Predicado que retorna o tipo de peça que ocupa uma determinada posição do tabuleiro no estado inicial
 decide_piece(Size, 1, NColumn, piece(elephant, player1)) :-
     NColumn =:= Size // 2,
     !.
@@ -136,11 +136,13 @@ water_hole(Board, pos(NRow, NColumn)) :-
     NRow =:= Size // 2 + 1,
     !.
 
-
+%elem_color(+Color, -Char)
+%Traduz a cor num char
 elem_color(white,' ').
 elem_color(black,'#').
 
-%print_elem()
+%print_elem(+Piece, -CharPiece, +Row, +Column)
+% Predicado responsável pela tradução da representação interna de cada elemento do tabuleiro num char que irá ser impresso na consola
 print_elem(empty, C,RowNum,ColNum):-
     color_square(RowNum,ColNum,Color),
     elem_color(Color,C).

@@ -1,7 +1,12 @@
+%game_initi(+BoardSize, +Mode)
+% Predicado responsável pelo ínicio do jogo. Cria o game_state inicial e entra no game_loop. 
 game_init(BoardSize, Mode) :-
     initial_state(BoardSize, GameState),
     display_game(GameState),
     game_loop(GameState, Mode).
+
+%game_loop(+GameState, +Mode)
+% Implementa o loop do jogo de acordo com o Mode
 
 game_loop(game_state(Board, player2), _) :-
     game_over(Board, player1),
@@ -21,9 +26,7 @@ game_loop(GameState, 1) :-
     game_loop(NewGameState, 1), 
     !.
 
-
 % Human - Computer - Easy
-
 game_loop(game_state(Board, player1), 2) :-
     GameState = game_state(Board, player1),
     human_move(GameState, InitialPosition ,FinalPosition),
@@ -41,7 +44,6 @@ game_loop(game_state(Board, player2), 2) :-
     !.
 
 % Computer - Human - Easy
-
 game_loop(game_state(Board, player1), 3) :-
     GameState = game_state(Board, player1),
     choose_move(GameState, easy , Move),
@@ -58,7 +60,6 @@ game_loop(game_state(Board, player2), 3) :-
 
 
 % Human - Computer - Difficult
-
 game_loop(game_state(Board, player1), 4) :-
     GameState = game_state(Board, player1),
     human_move(GameState, InitialPosition ,FinalPosition),
@@ -77,7 +78,6 @@ game_loop(game_state(Board, player2), 4) :-
     
 
 % Computer - Human - Difficult
-
 game_loop(game_state(Board, player1), 5) :-
     GameState = game_state(Board, player1),
     choose_move(GameState, difficult , Move),
@@ -95,7 +95,6 @@ game_loop(game_state(Board, player2), 5) :-
 
 
 % Computer - Computer
-
 game_loop(GameState,6) :-
     choose_move(GameState, difficult, Move),
     move(GameState, Move, NewGameState),
@@ -104,12 +103,15 @@ game_loop(GameState,6) :-
     %sleep(3),
     game_loop(NewGameState,6),!.
 
+%Jogada inválida
 game_loop(GameState,Mode) :-
     clear,
     display_game(GameState),
     write('Invalid move!'),
     game_loop(GameState,Mode),!.
 
+%game_over(+Board, -Player)
+%Verifica se o jogo já acabou. Se sim unifica o Player com o vencedor
 game_over(Board, Player) :-
     position_pieces(piece(_,Player), Board, Positions),
     findall(Pos, (member(Pos, Positions), water_hole(Board, Pos)), WaterHolePositions),

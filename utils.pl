@@ -1,3 +1,5 @@
+%find_water_holes(+Board, -ListPosWaterHoles)
+%Devolve uma lista com todas as posições dos water_holes 
 find_water_holes(Board, [pos(Aux1, Aux2), pos(Aux2, Aux1), pos(Aux1, Aux1), pos(Aux2, Aux2)]):-
     length(Board, Size),
     Aux1 is Size // 2 - 2,
@@ -44,6 +46,8 @@ change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
     NColumn1 is NColumn - 1,
     change_element_aux(T, NColumn1, NewElement, R).
 
+%abs(+X, -Y)
+%Unifica o Y com o módulo do número X
 abs(X, X) :- X #> 0.
 abs(X, Y) :- X #< 0, Y #= -X.
 abs(0,0).    
@@ -74,7 +78,8 @@ type_of_move(move_position(pos(InitialRow, InitialColumn), pos(FinalRow, Initial
     DisplacementRow #= DisplacementRowAux / DisplacementRowAux1,
     !.
 
-
+%sum_list(+List, -Sum)
+%Unifica a Sum com a soma de todos os elementos da lista
 sum_list([], 0).
 sum_list([X|Xs], Sum) :-
     sum_list(Xs, Sum1),

@@ -1,25 +1,24 @@
-% Clears the terminal screen
+%clear 
+%Limpa o terminal
 clear :- write('\e[2J').
 clear:-
     write('\33\[2J').
 
-/**
- * invalidDigit(+C)
- *
- * Checks if the char is an invalid digit and clears input if so
- */
+%invalidDigit(+Char)
+%Verifica se o char é inválido. Se for limpa o input
 invalidDigit(C) :-
     (C < 48 ; C > 57),
     skip_line.
 
-validDigit(C) :- \+ invalidDigit(C), !.
+%validDigit(+Char)
+%Verifica se o char é válido.
+validDigit(C) :- 
+    \+ invalidDigit(C), !.
 
-/**
- * read_number(-X)
- *
- * Reads a number from input
- */
-read_number(X) :- read_number(X, 0).
+%read_number(-Number)
+%Lê um número do input buffer
+read_number(X) :- 
+    read_number(X, 0).
 
 read_number(X, X) :-
     peek_code(10), !,
@@ -33,6 +32,8 @@ read_number(X, Acc) :-
     Acc1 is Tmp + Real,
     read_number(X, Acc1).
 
+%read_option(+Message, +Option, +Value)
+% Escreve a Message no terminal. Após isto verifica se a opção escolhida pelo utilizador é igual à Option.   
 read_option(Message,Option, Value) :-
     write(Message),
     read_number(Value),
@@ -42,11 +43,8 @@ read_option(Message,Option, Value) :-
     write('Invalid option!'),
     read_option(Message,Option, Value).
 
-/**
- * read_until_between(+Message, +Min, +Max, -Value)
- *
- * Reads a number from input until the user inserts one between two values
- */
+%read_until_between(+Message, +Min, +Max, -Value)
+%Lê um número do input enquanto o utilizador não inserir um número que se situa entre o Min e o Max
 read_until_between(Message,Min, Max, Value) :-
     write(Message),
     format('[~d-~d]: ', [Min, Max]),
@@ -57,11 +55,15 @@ read_until_between(Message,Min, Max, Value) :-
     format('Invalid option! Please choose between ~d and ~d~n', [Min, Max]),
     read_until_between(Message,Min, Max, Value).
 
+%write_initial_positions(+GameState, +ListPositions)
+%Imprime no ecrã as posições inicias válidas
 write_initial_positions(game_state(Board, _),ListPositions) :-
     write('Valid pices you can move:'),
     nl, 
     write_initial_positions_aux(game_state(Board, _),ListPositions).
 
+%write_initial_positions_aux(+GameState, +ListPositions)
+%Predicado auxiliar do write_initial_positions
 write_initial_positions_aux(game_state(_, _),[]).
 write_initial_positions_aux(game_state(Board, _),[pos(Xi,Yi) | Positions]):-
     nth0(Xi,Board,Row),
@@ -74,41 +76,32 @@ write_initial_positions_aux(game_state(Board, _),[pos(Xi,Yi) | Positions]):-
     write_initial_positions_aux(game_state(Board, _),Positions).
 
 
-%choose_move(+GameState, +Player,+Level, -Move)
+%human_move(+GameState, -Move)
+%Mostra ao jogador as posições iniciais válidas e unifica o Move com o move escolhido 
 human_move(game_state(Board, Player), pos(Xi, Yi),pos(Xf, Yf)):-
     valid_initial_positions(game_state(Board, Player), ListPositions),
     write_initial_positions(game_state(Board, Player),ListPositions),
     read_piece_pos(pos(Xi, Yi)),
     read_final_piece_pos(pos(Xf, Yf)).
 
-
+%read_piece_pos(-InitialPiece)
+% Lê a posição inicial da peça escolhida pelo utilizador
 read_piece_pos(pos(Xi, Yi)):-
     write('Pick a piece.'),
     nl,
     read_until_between('Line?',0,9,Xi),
     read_until_between('Column?',0,9,Yi).
 
+%read_final_piece_pos(-InitialPiece)
+% Lê a posição final da peça pretendida pelo utilizador
 read_final_piece_pos(pos(Xf, Yf)):-
     write('Chose the next position.'),
     nl,
     read_until_between('Line?',0,9,Xf),
     read_until_between('Column?',0,9,Yf).
 
-
-ask_player(Number):-
-    write('Which player do you want to be? (1 or 2)'),
-    nl,
-    read_number(Number),
-    Number >= 1,
-    Number < 3, !.
-
-ask_player(Number):-
-    clear,
-    write('Invalid number!'),
-    nl,
-    ask_player(Number).
-
-
+%ask_board_size(-BoardSize)
+%Pergunta ao jogador qual é o tamanho do tabuleiro que quer
 ask_board_size(BoardSize):-
     write('Please enter the size of the board.'),
     nl,

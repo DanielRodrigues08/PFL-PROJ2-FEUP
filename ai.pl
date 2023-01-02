@@ -1,5 +1,3 @@
-
-
 %valid_moves(+GameState, -ListOfMoves)
 %Unifica a variável ListOfMoves com a lista de todas as jogadas possíveis para o GameState
 valid_moves(GameState, ListOfMoves) :-
@@ -20,26 +18,35 @@ choose_move(GameState, difficult , Move) :-
    try_list_of_moves(GameState, ListOfMoves, Results),
    best_move(ListOfMoves, Results, Move).
 
+%try_list_of_moves(+GameState, +ListofMoves, -Results)
+%
 try_list_of_moves(GameState, ListOfMoves, Results) :-
    try_moves(GameState, ListOfMoves, Results, []).
 
+%try_moves(+GameState, +ListOfMoves, +Results, +Acc)
+%
 try_moves(_, [], Results, Acc):-
    reverse(Acc,Results).
 try_moves(GameState, [Move|Rest], Results, Acc) :-
    try_move(GameState, Move, Value),
    try_moves(GameState, Rest, Results, [Value|Acc]).
 
+%try_move(+GameState, +Move, -Value)
+%
 try_move(game_state(Board, Player), Move, Value) :-
    move(game_state(Board, Player), Move, NewGameState),
    value(NewGameState, Player, Move, Value).
 
+%best_move(+ListOfMoves, +Results, -BestMove)
+%
 best_move(ListOfMoves, Results, BestMove) :-
     max_member(MaxResult, Results),
     findall(Index, nth0(Index, Results, MaxResult), Indices),
     random_member(Index, Indices),
     nth0(Index, ListOfMoves, BestMove).
 
-
+%coefficient(+Type, -Value)
+%
 coefficient(scared,-1).
 coefficient(inWaterHole,10000).
 coefficient(trapped,-2).
@@ -48,22 +55,29 @@ coefficient(Distance, Value):-
    Distance > 0,
    Value is 1/Distance.
    
-%value(+GameState, +Player, -Value)
+%value(+GameState, +Player, +Move, -Value)
+%
 value(game_state(Board, _), NPlayer, Move, Value):-
    position_pieces(piece(_,NPlayer),Board,ListOfPositions),
    value_aux(Board,ListOfPositions,Move,Value,0).
    
-   %value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [],_, Value, Aux):- Value is Aux/6.
+% value_aux(+Board, +Positions, -Value, +Aux)
+% Predicado auxiliar do predicado value
+value_aux(_, [],_, Value, Aux):- 
+   Value is Aux/6.
 value_aux(Board, [Pos|Positions],Move, Value, Aux):-
     findall(C, coefficient_at_position(Board,Move, Pos, C), Coefficients),
     sum_list(Coefficients, CoefficientSum),
     NewAux is Aux + CoefficientSum,
     value_aux(Board, Positions, Move, Value, NewAux).
-   
+
+%list_of_distances(...)
+%
 list_of_distances(PositionMove, ListOfPositions, Results) :-
     distances(PositionMove, ListOfPositions, Results, []).
-        
+
+%distance(...)
+%     
 distances(_, [], Acc, Acc).
 distances(PositionMove, [Position|Rest], Results, Acc) :-
     distance(PositionMove, Position, Value),
@@ -74,7 +88,8 @@ distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
    DeltaY is NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
-
+%coefficient_at_position(+Board, +Move, +Pos, -Value)
+%
 coefficient_at_position(Board,move_position(IPos,_), _, -200) :-
    \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
