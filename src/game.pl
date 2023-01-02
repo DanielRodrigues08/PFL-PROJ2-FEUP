@@ -100,7 +100,7 @@ game_loop(GameState,6) :-
     move(GameState, Move, NewGameState),
     nl,
     display_game(NewGameState),
-    %sleep(3),
+    sleep(2),
     game_loop(NewGameState,6),!.
 
 %Jogada inválida
