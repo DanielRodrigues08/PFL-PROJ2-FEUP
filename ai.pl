@@ -45,7 +45,7 @@ coefficient(inWaterHole,0.98).
 coefficient(trapped,-2).
 coefficient(0.0, 2).
 coefficient(Distance, Value):-
-   Value is 1/Distance.
+   Value #= 1/Distance.
    
 %value(+GameState, +Player, -Value)
 value(game_state(Board, _), NPlayer, Value):-
@@ -71,8 +71,8 @@ distances(PositionMove, [Position|Rest], Results, Acc) :-
     distances(PositionMove, Rest, Results, [Value|Acc]).
         
 distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
-   DeltaX is NumRow2 - NumRow1,
-   DeltaY is NumCol2 - NumCol1,
+   DeltaX #= NumRow2 - NumRow1,
+   DeltaY #= NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
 coefficient_at_position(Board, Pos, C) :-
