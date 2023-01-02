@@ -99,8 +99,8 @@ back_menu(0):-
 display_instructions :-
     write('------------------------------ Game Board ------------------------------'),nl,
     nl,nl,
-    write('The board is an NxN squared board, where N is an odd number between'),nl,
-    write('11 and 19. The board has a checkered pattern of black and white spaces.'),nl,
+    write('The board is an NxN squared board, where N is an even number larger than'),nl,
+    write('10. The board has a checkered pattern of black and white spaces.'),nl,
     write('The elephants are placed in the center of each player´s back row, the'),nl,
     write('mice in front of the elephants and the lions to the sides of the mice'),nl,
     write('Watering holes are near the center of the game board. Animals are never'),nl,
