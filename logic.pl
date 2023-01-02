@@ -106,7 +106,7 @@ jump_animals(Board, Move, pos(DisplacementRow, DisplacementColumn)) :-
 jump_animals_aux(Board, pos(FinalRow, FinalColumn), pos(FinalRow, FinalColumn), _) :-
     !, get_element_board(Board, pos(FinalRow, FinalColumn), piece(_,_)).
 
-jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
+jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, _) :-
     get_element_board(Board, pos(CurrentRow, CurrentColumn), piece(_,_)), !.
 
 jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(DisplacementRow, DisplacementColumn)) :-
