@@ -1,3 +1,5 @@
+
+
 %valid_moves(+GameState, -ListOfMoves)
 %Unifica a variável ListOfMoves com a lista de todas as jogadas possíveis para o GameState
 valid_moves(GameState, ListOfMoves) :-
@@ -27,7 +29,7 @@ try_moves(GameState, [Move|Rest], Results, Acc) :-
    try_moves(GameState, Rest, Results, [Value|Acc]).
 
 try_move(game_state(Board, Player), Move, Value) :-
-   move(game_state(Board, Player), Move, NewGameState).
+   move(game_state(Board, Player), Move, NewGameState),
    value(NewGameState, Player, Value).
 
 best_move(ListOfMoves, Results, BestMove) :-
@@ -45,13 +47,14 @@ coefficient(0.0, 2).
 coefficient(Distance, Value):-
    Value is 1/Distance.
    
-   %value(+GameState, +Player, -Value)
+%value(+GameState, +Player, -Value)
 value(game_state(Board, _), NPlayer, Value):-
    position_pieces(piece(_,NPlayer),Board,ListOfPositions),
    value_aux(Board,ListOfPositions,Value,0).
+
    
    %value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [], Aux, Aux).%:- Value is Aux/6.
+value_aux(_, [], Value, Aux):- Value is Aux/6.
 
 value_aux(Board, [Pos|Positions], Value, Aux):-
     findall(C, coefficient_at_position(Board, Pos, C), Coefficients),

@@ -43,7 +43,8 @@ trap_animal(Board, Position) :-
 trap_animal_aux(Board, Position) :-
     get_element_board(Board, Position, piece(Animal, _)),
     type_of_moviment(piece(Animal,_), TypeOfMoviment),
-    adjacent_position(Position, Position2, TypeOfMoviment),
+    
+    (Position, Position2, TypeOfMoviment),
     adjacent_animals(Board, Position, Position2, _),
     !.
 

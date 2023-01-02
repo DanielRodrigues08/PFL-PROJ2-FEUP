@@ -1,12 +1,22 @@
+find_water_holes(Board, [pos(Aux1, Aux2), pos(Aux2, Aux1), pos(Aux1, Aux1), pos(Aux2, Aux2)]):-
+    length(Board, Size),
+    Aux1 is Size // 2 - 2,
+    Aux2 is Size // 2 + 1.
+
 %get_element_board(+Board, +Position, -Elem)
 %Unifica o elemento que ocupa a posição Row-Column no tabuleiro com a variável Elem
 get_element_board(Board, pos(NRow, NColumn), Elem) :-
     nth0(NRow, Board, Row),
     nth0(NColumn, Row, Elem).
 
+not_inst(Var):-
+    \+(\+(Var=0)),
+    \+(\+(Var=1)).
+
 %position_pieces(+Elem, +Board, -Positions)
 %Unifica Positions com a lista de todas as posições do Elem presente no Board 
 position_pieces(Elem, Board, Positions) :-
+    \+not_inst(Board),
     setof(pos(NRow, NColumn), (Sublist,Elem)^(nth0(NRow, Board, Sublist), member(Elem, Sublist), nth0(NColumn, Sublist, Elem)), Positions).
 
 %change_board(+Board, +OldPositon, +NewPosition, -NewBoard)
