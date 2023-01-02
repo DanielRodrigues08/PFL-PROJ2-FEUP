@@ -46,14 +46,14 @@ coefficient(Distance, Value):-
    Value is 1/Distance.
    
    %value(+GameState, +Player, -Value)
-value(game_state(Board, Player), NPlayer, Value):-
-   position_pieces(piece(_, NPlayer), Board, ListPositions),
-   value_aux(Board, ListPositions,Value,0).
+value(game_state(Board, _), NPlayer, Value):-
+   position_pieces(piece(_,NPlayer),Board,ListOfPositions),
+   value_aux(Board,ListOfPositions,Value,0).
    
    %value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [], Value, Aux):-
-   Value is Aux/6.
-   value_aux(Board, [Pos|Positions], Value, Aux):-
+value_aux(_, [], Aux, Aux).%:- Value is Aux/6.
+
+value_aux(Board, [Pos|Positions], Value, Aux):-
     findall(C, coefficient_at_position(Board, Pos, C), Coefficients),
     sum_list(Coefficients, CoefficientSum),
     NewAux is Aux + CoefficientSum,

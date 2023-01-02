@@ -33,7 +33,7 @@ change_element([H|T], pos(NRow, NColumn), NewElement, [H|R]) :-
 
 %change_element_aux(+List, +NColumn, +NewElement, -NewList)
 %Predicado auxiliar do chanhe_element. Responsável por substituir o elemento que ocupa a posição NColumn de uma lista.
-change_element_aux([_|T], 0, NewElement, [NewElement | T]).
+change_element_aux([H|T], 0, NewElement, [NewElement | T]).
 change_element_aux([H|T], NColumn, NewElement, [H|R]) :-
     NColumn > 0,
     NColumn1 is NColumn - 1,
@@ -75,7 +75,47 @@ sum_list([X|Xs], Sum) :-
     sum_list(Xs, Sum1),
     Sum is X + Sum1.
 
-find_water_holes(Board, [pos(Aux1, Aux2), pos(Aux2, Aux1), pos(Aux1, Aux1), pos(Aux2, Aux2)]):-
-    length(Board, Size),
-    Aux1 is Size // 2 - 2,
-    Aux2 is Size // 2 + 1.
+%adjacent_position(+Pos1, ?Pos2)
+%Verifica se as posições Pos1 e Pos2 são adjacentes. Também pode unificar a Pos2 com uma posição adjacente a Pos1
+adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2)) :-
+    dif(pos(NRow1, NColumn1), pos(NRow2, NColumn2)),
+    DisplacementRow #= NRow2 - NRow1,
+    DisplacementColumn #= NColumn2 - NColumn1,
+    DisplacementColumn #< 2,
+    DisplacementColumn #> -2,
+    DisplacementRow #< 2,
+    DisplacementRow #> -2.
+
+
+%adjacent_position(+Pos1, ?Pos2, +Type)
+%Muito semalhante ao predicado adjacent_position/2 sendo que neste predicado podemos especificar as posições onde tem de procurar
+adjacent_position(pos(NRow, NColumn1), pos(NRow, NColumn2), horizontal) :-
+    dif(NColumn1,NColumn2),
+    DisplacementColumn #= NColumn2 - NColumn1,
+    DisplacementColumn #< 2,
+    DisplacementColumn #> -2.
+
+adjacent_position(pos(NRow1, NColumn), pos(NRow2, NColumn), vertical) :-
+    dif(NRow1,NRow2),
+    DisplacementRow #= NRow2 - NRow1,
+    DisplacementRow #< 2,
+    DisplacementRow #> -2.
+
+adjacent_position(pos(NRow1, NColumn1), pos(NRow2, NColumn2), diagonal) :-
+    dif(NRow1,NRow2),
+    dif(NColumn1, NColumn2),
+    DisplacementRow #= NRow2 - NRow1,
+    DisplacementColumn #= NColumn2 - NColumn1,
+    DisplacementColumn #< 2,
+    DisplacementColumn #> -2,
+    DisplacementRow #< 2,
+    DisplacementRow #> -2.
+
+%type_of_movimento(?Piece, ?TypeOfMoviment)
+%Associa os animais com os tipos de deslocamentos que podem no tabuleiro
+type_of_moviment(piece(mouse,_), horizontal).
+type_of_moviment(piece(mouse,_), vertical).
+type_of_moviment(piece(lion,_), diagonal).
+type_of_moviment(piece(elephant,_), horizontal).
+type_of_moviment(piece(elephant,_), vertical).
+type_of_moviment(piece(elephant,_), diagonal).
