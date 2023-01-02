@@ -1,4 +1,4 @@
-ame_init(BoardSize, Mode) :-
+game_init(BoardSize, Mode) :-
     initial_state(BoardSize, GameState),
     display_game(GameState),
     game_loop(GameState, Mode).

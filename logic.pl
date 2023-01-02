@@ -114,34 +114,3 @@ jump_animals_aux(Board, pos(CurrentRow, CurrentColumn), FinalPosition, pos(Displ
     CurrentColumn1 is CurrentColumn + DisplacementColumn,
     jump_animals_aux(Board, pos(CurrentRow1, CurrentColumn1), FinalPosition, pos(DisplacementRow, DisplacementColumn)).
 
-
-coefficient(scared,0.02).
-coefficient(notScared,0.2).
-coefficient(inWaterHole,0.77).
-coefficient(trapped,0.01).
-
-%value(+GameState, +Player, -Value)
-value(game_state(Board, Player), NPlayer, Value):-
-    position_pieces(piece(_, NPlayer), Board, ListPositions),
-    value_aux(Board, ListPositions,Value,0).
-
-%value_aux(+Board, +Positions, -Value, +Aux)
-value_aux(_, [], Value, Aux):-
-    Value is Aux/6.
-value_aux(Board, [Pos|Positions], Value, Aux):-
-    findall(C, coefficient_at_position(Board, Pos, C), Coefficients),
-    sum_list(Coefficients, CoefficientSum),
-    NewAux is Aux + CoefficientSum,
-    value_aux(Board, Positions, Value, NewAux).
-
-coefficient_at_position(Board, Pos, C) :-
-    water_hole(Board, Pos),
-    coefficient(inWaterHole, C).
-coefficient_at_position(Board, Pos, C) :-
-    trap_animal(Board, Pos),
-    coefficient(trapped, C).
-coefficient_at_position(Board, Pos, C) :-
-    scared_animal(Board, Pos),
-    coefficient(scared, C).
-coefficient_at_position(_, _, C) :-
-    coefficient(notScared, C).
