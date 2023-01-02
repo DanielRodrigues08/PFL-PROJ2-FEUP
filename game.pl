@@ -5,11 +5,13 @@ ame_init(BoardSize, Mode) :-
 
 game_loop(game_state(Board, player2), _) :-
     game_over(Board, player1),
-    !.
+    !,
+    display_end_game(player1).
 
 game_loop(game_state(Board, player1), _) :-
     game_over(Board, player2),
-    !.
+    !,
+    display_end_game(player2).
     
 % Human - Human
 game_loop(GameState, 1) :-
@@ -99,7 +101,7 @@ game_loop(GameState,6) :-
     move(GameState, Move, NewGameState),
     nl,
     display_game(NewGameState),
-    sleep(3),
+    %sleep(3),
     game_loop(NewGameState,6),!.
 
 game_loop(GameState,Mode) :-

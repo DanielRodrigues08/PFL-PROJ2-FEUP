@@ -21,6 +21,7 @@ choose_move(GameState, difficult , Move) :-
    best_move(ListOfMoves, Results, Move).
 
 try_list_of_moves(GameState, ListOfMoves, Results) :-
+   write(ListOfMoves),
    try_moves(GameState, ListOfMoves, Results, []).
 
 try_moves(_, [], Results, Acc):-
@@ -79,13 +80,30 @@ distance(pos(NumRow1,NumCol1),pos(NumRow2,NumCol2),Distance):-
    DeltaY is NumCol2 - NumCol1,
    Distance is sqrt(DeltaX * DeltaX + DeltaY * DeltaY).
 
+get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles):-
+   get_the_empty_aux(Board, ListOfPositions, ListOfEmptyWaterHoles, []).
+
+get_the_empty_aux(_, [], Acc, Acc).
+
+get_the_empty_aux(Board, [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
+   nth0(Row,Board, Line),
+   nth0(Col,Line,Elem),
+   print_elem(Elem, 'W',_,_),
+
+get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, [pos(Row,Col)|Acc]).
+
+get_the_empty_aux(Board,  [pos(Row,Col)|Rest], ListOfEmptyWaterHoles, Acc):-
+   get_the_empty_aux(Board, Rest, ListOfEmptyWaterHoles, Acc).
+
 coefficient_at_position(Board,move_position(IPos,_), Pos, -200) :-
+   \+scared_animal(Board, IPos),
    water_hole(Board, IPos),!.
 coefficient_at_position(Board,_, Pos, C) :-
    water_hole(Board, Pos),
    coefficient(inWaterHole, C).
 coefficient_at_position(Board,_,Pos, C) :-
    find_water_holes(Board,ListWaterHoles),
+   %get_the_empty(Board, ListWaterHoles,ListOfEmptyWaterHoles),
    list_of_distances(Pos,ListWaterHoles, ListOfDistances),
    min_member(MinDistance, ListOfDistances),
    coefficient(MinDistance, C).

@@ -7,16 +7,28 @@ menu :-
     option_selected(Option).
 
 % case option ir exit
-option_selected(0) :-
+option_selected(0) :- display_end.
     /*exit program upon input 0 in main menu.*/
-    write('\n| Thanks for playing Barca |\n\n').
 
-option_selected(7):- display_instructions, go_back(Input).
+
+option_selected(7):- display_instructions, go_back.
 
 option_selected(Num):-
     ask_board_size(BoardSize),
     game_init(BoardSize, Num). 
 
+display_end:-
+        nl,nl, clear,
+        write(' **************************************************************'),nl,
+        write('*                   ######  ##   ##  #####                    *'),nl,
+        write('*                   ##      ###  ##  ##   ##                  *'),nl,
+        write('*                   ####    ## # ##  ##   ##                  *'),nl,
+        write('*                   ##      ##  ###  ##   ##                  *'),nl,
+        write('*                   ######  ##   ##  #####                    *'),nl,
+        write('*                                                             *'),nl,
+        write('*                   Thanks for playing Barca                  *'),nl,
+        write('***************************************************************'),nl.
+    
 
 % display menu
 display_menu :-
@@ -43,48 +55,28 @@ display_menu :-
     write('*                                                                 *'),nl,
     write('*******************************************************************'),nl,nl.
 
-% display winner
-display_winner :-
-    nl,nl, clear,
-    write(' ************************************************************************'),nl,
-    write('*                                                                       *'),nl,
-    write('*       ##        ##  ####  ##    ##  ##    ##  #######  #######        *'),nl,
-    write('*       ##   ##   ##   ##   ###   ##  ###   ##  ##       ##    ##       *'),nl,
-    write('*       ##   ##   ##   ##   ## #  ##  ## #  ##  ##       ##    ##       *'),nl,
-    write('*       ##   ##   ##   ##   ##  # ##  ##  # ##  #####    ######         *'),nl,
-    write('*       ##   ##   ##   ##   ##   ###  ##   ###  ##       ##    ##       *'),nl,
-    write('*       ##   ##   ##   ##   ##    ##  ##    ##  ##       ##    ##       *'),nl,
-    write('*        ####  ####   ####  ##     #  ##    ##  #######  ##    ##       *'),nl,
-    write('*************************************************************************'),nl,
-    write('*                                                                       *'),nl,
-    write('*        [1]  Play Again                                                *'),nl,
-    write('*        [0]  Exit                                                      *'),nl,
-    write('*                                                                       *'),nl,
-    write('*************************************************************************'),nl,nl.
-
 % display game over
-display_game_over :-
+display_end_game(Winner):-
     nl,nl, clear,
     write(' **************************************************************'),nl,
+    write('*                   ######  ##   ##  #####                    *'),nl,
+    write('*                   ##      ###  ##  ##   ##                  *'),nl,
+    write('*                   ####    ## # ##  ##   ##                  *'),nl,
+    write('*                   ##      ##  ###  ##   ##                  *'),nl,
+    write('*                   ######  ##   ##  #####                    *'),nl,
+    write('*                                                             *'),nl,
     write('*               ###      ###    ###   ###  ######             *'),nl,
     write('*             ##   #    #   #   ##  #  ##  ##                 *'),nl,
     write('*             ##       #######  ##     ##  ####               *'),nl,
     write('*             ##   ##  ##   ##  ##     ##  ##                 *'),nl,
     write('*              #####   ##   ##  ##     ##  ######             *'),nl,
     write('*                                                             *'),nl,
-    write('*               ####    ##   ##  ######  ######               *'),nl,
-    write('*              ##   ##  ##   ##  ##      ##   ##              *'),nl,
-    write('*              ##   ##  ##   ##  ####    ######               *'),nl,
-    write('*              ##   ##   #   #   ##      ##   ##              *'),nl,
-    write('*               ####      ###    ######  ##   ##              *'),nl,
+    write('*                       WINNER : '),write(Winner),write('                      *'),nl,
+    write('*                                                             *'),nl,
     write('***************************************************************'),nl,
-    write('*                                                             *'),nl,
-    write('*        [1]  Try Again                                       *'),nl,
-    write('*        [0]  Exit                                            *'),nl,
-    write('*                                                             *'),nl,
-    write('***************************************************************'),nl,nl.
+    go_back.
 
-go_back(Input):-
+go_back:-
     read_option('\nPress [0] to go back to menu.',0, Value),
     back_menu(Option).
 

@@ -16,7 +16,7 @@ vaild_move(GameState, move_position(InitialPos, FinalPos)) :-
     valid_initial_positions(GameState, ValidInitialPositions),
     member(InitialPos, ValidInitialPositions),
     trap_animal(Board, InitialPos),
-    get_element(Board, FinalPos, piece(_,_)),
+    \+get_element(Board, FinalPos, piece(_,_)),
     get_element_board(Board, InitialPos, Piece),
     scared_animal(Board, Piece, FinalPos).
 

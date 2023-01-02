@@ -130,7 +130,3 @@ type_of_moviment(piece(elephant,_), horizontal).
 type_of_moviment(piece(elephant,_), vertical).
 type_of_moviment(piece(elephant,_), diagonal).
 
-reverse([], []). % base case: an empty list is already reversed
-reverse([Head|Tail], Reversed) :- % recursive case:
-    reverse(Tail, ReversedTail), % reverse the tail
-    append(ReversedTail, [Head], Reversed). % append the head to the end of the reversed tail
