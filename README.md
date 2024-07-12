@@ -1,3 +1,6 @@
+# Functional and Logic Programming
+FEUP L.EIC Y3S1
+
 # Projeto 2 (PFL) - Barca
 
 Ana Sofia Guedes Vieira Santos Costa - up202007602 (50%)
